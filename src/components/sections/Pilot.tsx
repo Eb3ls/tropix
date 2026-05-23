@@ -4,18 +4,16 @@ import { Check, ArrowRight } from 'lucide-react'
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
 const included = [
-  'Multispectral drone flights, every 14 days during the active season',
+  'Daily multispectral drone flights during the active season',
   'Sap-flow sensor kit installation on representative trees',
   'Mobile app access (Italian) + multi-farm web dashboard',
   'Quarterly on-site visits from a TropiX agronomist',
-  'Buyer-portal listing once first yield forecast is generated',
   'Public-incentive eligibility check (PNRR, Regione Sicilia)',
 ]
 
 const interests = [
   'Disease detection',
-  'Yield forecasting',
-  'Buyer marketplace',
+  'Irrigation monitoring',
   'Public incentives',
 ]
 
@@ -111,13 +109,15 @@ export function Pilot() {
                 textWrap: 'balance',
               }}
             >
-              Eight farms. One growing season. Hardware on loan, full reporting
-              included.
+              Eight farms will have the most precise view of their avocado and
+              mango in Sicily. Yours could be one of them.
             </h2>
 
-            <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#524C42', marginBottom: '40px' }}>
-              The 2026 cohort opens to eight avocado or mango farms in Sicily,
-              Calabria, or Puglia. Three-year contracts begin{' '}
+            <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#524C42', marginBottom: '16px' }}>
+              The 2026 pilot cohort opens to eight avocado or mango farms in
+              Sicily, Calabria, or Puglia. Hardware is on loan. No upfront
+              investment. The annual fee is subsidised for the founding cohort.
+              Three-year contracts begin{' '}
               <span
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
@@ -125,13 +125,26 @@ export function Pilot() {
                 }}
               >
                 Q2 2026
-              </span>
-              . Pilot fee is subsidised against the seed-stage development cost.
+              </span>.
+            </p>
+
+            {/* Urgency note */}
+            <p
+              style={{
+                fontSize: '14px',
+                lineHeight: 1.55,
+                color: '#A86415',
+                fontWeight: 500,
+                marginBottom: '40px',
+              }}
+            >
+              Applications are reviewed in order of receipt. Once the cohort is
+              full, the list closes.
             </p>
 
             {/* Meta grid */}
             <div
-              className="grid grid-cols-2"
+              className="grid grid-cols-3"
               style={{
                 gap: '32px',
                 borderTop: '1px solid #C9BEA6',
@@ -144,7 +157,6 @@ export function Pilot() {
                 { label: 'COHORT SIZE', value: '8 farms' },
                 { label: 'CONTRACT LENGTH', value: '3 years' },
                 { label: 'MINIMUM SURFACE', value: '5 ha' },
-                { label: 'ANNUAL FEE', value: '€10–13k' },
               ].map(item => (
                 <div key={item.label}>
                   <div
@@ -163,7 +175,9 @@ export function Pilot() {
                     style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontVariantNumeric: 'tabular-nums',
-                      fontSize: '18px',
+                      fontSize: '28px',
+                      lineHeight: 1.1,
+                      letterSpacing: '-0.02em',
                       color: '#0A1410',
                     }}
                   >
@@ -173,40 +187,17 @@ export function Pilot() {
               ))}
             </div>
 
-            {/* Included list */}
-            <p
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-                color: '#524C42',
-                marginBottom: '16px',
-              }}
-            >
-              Included in the annual fee
-            </p>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {included.map(item => (
-                <li key={item} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <Check size={18} style={{ color: '#D9882B', flexShrink: 0, marginTop: '2px' }} />
-                  <span style={{ fontSize: '15px', lineHeight: 1.5, color: '#524C42' }}>
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Right: form card */}
           <div id="apply">
             <div
               style={{
-                background: '#FAF6EC',
+                background: 'linear-gradient(140deg, #FAF6EC 0%, rgba(217,136,43,0.05) 100%)',
                 border: '1px solid #C9BEA6',
                 borderRadius: '12px',
                 padding: '40px',
-                boxShadow: '0 4px 12px -4px rgba(20, 39, 30, 0.16)',
+                boxShadow: '0 4px 16px -6px rgba(20, 39, 30, 0.18)',
               }}
             >
               {formState === 'success' ? (
@@ -364,7 +355,7 @@ export function Pilot() {
                     {/* Row 5: Primary interest pills */}
                     <div>
                       <label style={labelStyle}>Primary interest</label>
-                      <div className="grid grid-cols-2" style={{ gap: '8px' }}>
+                      <div className="grid grid-cols-3" style={{ gap: '8px' }}>
                         {interests.map(interest => {
                           const checked = selectedInterests.includes(interest)
                           return (
@@ -477,6 +468,47 @@ export function Pilot() {
                 </form>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Included list — full width below the form grid */}
+        <div
+          style={{
+            marginTop: '48px',
+            paddingTop: '40px',
+            borderTop: '1px solid #C9BEA6',
+          }}
+        >
+          <p
+            style={{
+              fontSize: '12px', letterSpacing: '0.06em',
+              textTransform: 'uppercase', fontWeight: 500,
+              color: '#524C42', marginBottom: '24px',
+            }}
+          >
+            Included in the annual fee
+          </p>
+          <div
+            className="grid grid-cols-2 sb:grid-cols-5"
+            style={{ gap: '16px' }}
+          >
+            {included.map(item => (
+              <div
+                key={item}
+                style={{
+                  display: 'flex', gap: '10px', alignItems: 'flex-start',
+                  padding: '14px 16px',
+                  background: '#FAF6EC',
+                  border: '1px solid #C9BEA6',
+                  borderRadius: '8px',
+                }}
+              >
+                <Check size={16} style={{ color: '#D9882B', flexShrink: 0, marginTop: '2px' }} />
+                <span style={{ fontSize: '13px', lineHeight: 1.5, color: '#524C42' }}>
+                  {item}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

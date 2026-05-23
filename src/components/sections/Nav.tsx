@@ -24,8 +24,7 @@ export function Nav() {
             fontWeight: 400,
           }}
         >
-          Trop
-          <em style={{ color: '#D9882B', fontStyle: 'italic' }}>X</em>
+          Tropi<em style={{ color: '#D9882B', fontStyle: 'italic' }}>X</em>
         </a>
 
         {/* Right side */}
@@ -37,6 +36,7 @@ export function Nav() {
               { label: 'Capabilities', href: '#capabilities' },
               { label: 'Pilot', href: '#pilot' },
               { label: 'Team', href: '#team' },
+              { label: 'Platform', href: '#/platform' },
             ].map(({ label, href }) => (
               <a
                 key={href}

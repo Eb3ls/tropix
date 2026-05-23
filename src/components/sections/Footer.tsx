@@ -5,7 +5,7 @@ const nav = [
       { label: 'System', href: '#system' },
       { label: 'Capabilities', href: '#capabilities' },
       { label: 'Sicily pilot', href: '#pilot' },
-      { label: 'Buyer portal', href: '#' },
+      { label: 'Platform preview', href: '#/platform' },
     ],
   },
   {
@@ -48,13 +48,13 @@ export function Footer() {
                 marginBottom: '16px',
               }}
             >
-              Trop<em style={{ color: '#D9882B', fontStyle: 'italic' }}>X</em>
+              Tropi<em style={{ color: '#D9882B', fontStyle: 'italic' }}>X</em>
             </div>
             <p
               style={{
                 fontSize: '14px',
                 lineHeight: 1.55,
-                color: 'rgba(244, 239, 227, 0.6)',
+                color: 'rgba(244, 239, 227, 0.75)',
                 maxWidth: '280px',
               }}
             >
@@ -110,7 +110,7 @@ export function Footer() {
           }}
         >
           <span style={{ fontSize: '12px', color: 'rgba(244, 239, 227, 0.45)' }}>
-            © 2026 TropiX S.r.l. · P.IVA 02XXXXXX · Trento, Italia
+            © 2026 TropiX S.r.l. · Trento, Italia
           </span>
           <div style={{ display: 'flex', gap: '20px' }}>
             {['Privacy', 'Terms', 'Cookie policy'].map(label => (
