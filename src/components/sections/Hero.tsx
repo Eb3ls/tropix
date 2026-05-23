@@ -166,6 +166,35 @@ export function Hero() {
               See what a season looks like
               <ArrowDownRight size={16} />
             </a>
+
+            {/* Demo — ghost amber */}
+            <a
+              href="#/demo"
+              onClick={e => {
+                e.preventDefault()
+                window.location.hash = '#/demo'
+                window.dispatchEvent(new HashChangeEvent('hashchange'))
+              }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                color: '#F0C381', fontSize: '15px', fontWeight: 500,
+                padding: '13px 20px', borderRadius: '8px',
+                border: '1px solid rgba(240, 195, 129, 0.35)',
+                textDecoration: 'none',
+                transition: 'border-color 200ms cubic-bezier(0.2, 0.7, 0.2, 1), background 200ms cubic-bezier(0.2, 0.7, 0.2, 1)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(240, 195, 129, 0.65)'
+                e.currentTarget.style.background = 'rgba(240, 195, 129, 0.07)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'rgba(240, 195, 129, 0.35)'
+                e.currentTarget.style.background = 'transparent'
+              }}
+            >
+              Guarda la demo
+              <ArrowRight size={16} />
+            </a>
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { Pilot } from '@/components/sections/Pilot'
 import { Team } from '@/components/sections/Team'
 import { Footer } from '@/components/sections/Footer'
 import { Platform } from '@/pages/Platform'
+import { Demo } from '@/pages/Demo'
 
 function Landing() {
   return (
@@ -29,18 +30,23 @@ function Landing() {
 }
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'platform'>(() =>
-    window.location.hash === '#/platform' ? 'platform' : 'landing'
-  )
+  const [view, setView] = useState<'landing' | 'platform' | 'demo'>(() => {
+    if (window.location.hash === '#/platform') return 'platform'
+    if (window.location.hash === '#/demo') return 'demo'
+    return 'landing'
+  })
 
   useEffect(() => {
     const handleHash = () => {
-      setView(window.location.hash === '#/platform' ? 'platform' : 'landing')
-      if (window.location.hash !== '#/platform') window.scrollTo(0, 0)
+      if (window.location.hash === '#/platform') setView('platform')
+      else if (window.location.hash === '#/demo') setView('demo')
+      else { setView('landing'); window.scrollTo(0, 0) }
     }
     window.addEventListener('hashchange', handleHash)
     return () => window.removeEventListener('hashchange', handleHash)
   }, [])
 
-  return view === 'platform' ? <Platform /> : <Landing />
+  if (view === 'platform') return <Platform />
+  if (view === 'demo') return <Demo />
+  return <Landing />
 }

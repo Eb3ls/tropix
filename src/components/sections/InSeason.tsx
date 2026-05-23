@@ -97,14 +97,6 @@ export function InSeason() {
               marginBottom: '28px',
             }}
           >
-            {/*
-              Dots are centered within each column.
-              Column centers: 16.67%, 50%, 83.33% from left.
-              Line: left=calc(16.67%-4px) (center of dot1 minus radius),
-                    right=calc(16.67%-4px) (center of dot3 minus radius, from right edge).
-              Timing: line draws 800ms from t=100ms. Dots pop at t=80, 500, 900ms
-              — dot i appears just as the line reaches it.
-            */}
             <div
               style={{
                 position: 'absolute',
@@ -129,7 +121,6 @@ export function InSeason() {
 
             {/* Dots — centered within each column */}
             {events.map((_, i) => {
-              // dot i appears when the line reaches it
               const dotDelay = [80, 500, 900][i]
               return (
                 <div key={i} style={{ display: 'flex', justifyContent: 'center' }}>
@@ -163,7 +154,6 @@ export function InSeason() {
                   paddingLeft: i > 0 ? '40px' : '0',
                   paddingTop: '32px',
                   borderLeft: i > 0 ? '1px solid #C9BEA6' : undefined,
-                  /* Stagger fade in */
                   opacity: visible ? 1 : 0,
                   transform: visible ? 'none' : 'translateY(18px)',
                   transition: `opacity 520ms ${i * 110}ms cubic-bezier(0.2,0.7,0.2,1), transform 520ms ${i * 110}ms cubic-bezier(0.2,0.7,0.2,1)`,
