@@ -7,7 +7,7 @@ const challenges = [
     title: 'Root rot is silent.',
     body: (
       <>
-        <em style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}>
+        <em style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>
           Phytophthora cinnamomi
         </em>{' '}
         establishes in the root zone weeks before canopy stress is visible. By the time a tree
@@ -53,30 +53,35 @@ export function Challenge() {
       id="challenge"
       ref={sectionRef}
       style={{
-        background: '#EBE4D2',
-        borderTop: '1px solid #C9BEA6',
-        borderBottom: '1px solid #C9BEA6',
+        background: '#E8E1CF',
+        borderTop: '1px solid #BDB5A0',
+        borderBottom: '1px solid #BDB5A0',
         padding: '96px 0',
       }}
     >
-      <div className="mx-auto" style={{ maxWidth: '1280px', padding: '0 80px' }}>
-        <div className="flex items-center gap-3 mb-5">
-          <div style={{ width: '24px', height: '1px', background: '#D9882B', flexShrink: 0 }} />
-          <span
-            style={{
-              fontSize: '12px', letterSpacing: '0.08em',
-              textTransform: 'uppercase', fontWeight: 500, color: '#A86415',
-            }}
-          >
-            THE CHALLENGE
+      <div className="mx-auto px-6 sb:px-20" style={{ maxWidth: '1280px' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: '#CC5427', fontWeight: 500,
+          }}>
+            PRB-01
+          </span>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: '#BDB5A0',
+          }}>
+            <span aria-hidden="true">{' · '}</span>THE CHALLENGE
           </span>
         </div>
 
         <h2
           style={{
-            fontFamily: "'Instrument Serif', serif",
+            fontFamily: "'DM Serif Display', serif",
             fontSize: 'clamp(36px, 4.5vw, 56px)',
-            lineHeight: 1.05, fontWeight: 400, color: '#0A1410',
+            lineHeight: 1.05, fontWeight: 400, color: '#191E1A',
             marginBottom: '20px', maxWidth: '720px', textWrap: 'balance',
           }}
         >
@@ -84,19 +89,19 @@ export function Challenge() {
           has never faced.
         </h2>
 
-        <p style={{ fontSize: '19px', lineHeight: 1.5, color: '#524C42', maxWidth: '580px' }}>
+        <p style={{ fontSize: '19px', lineHeight: 1.5, color: '#7A7060', maxWidth: '580px' }}>
           Converting citrus land to tropical fruit is a calculated risk. The
           problems are crop-specific. Platforms built for European cereals and
           vineyards were not designed for{' '}
-          <em style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}>Persea</em>{' '}
+          <em style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>Persea</em>{' '}
           or{' '}
-          <em style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}>Mangifera</em>.
+          <em style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>Mangifera</em>.
         </p>
 
         {/* Asymmetric grid — primary challenge gets more space */}
         <div
           className="grid grid-cols-1 sb:grid-cols-[11fr_9fr]"
-          style={{ marginTop: '56px', borderTop: '1px solid #C9BEA6', paddingTop: '48px' }}
+          style={{ marginTop: '56px', borderTop: '1px solid #BDB5A0', paddingTop: '48px' }}
         >
           {challenges.map((c, i) => (
             <div
@@ -107,7 +112,7 @@ export function Challenge() {
                 overflow: 'hidden',
                 paddingRight: i === 0 ? '48px' : '0',
                 paddingLeft: i === 1 ? '48px' : '0',
-                borderLeft: i === 1 ? '1px solid #C9BEA6' : undefined,
+                borderLeft: i === 1 ? '1px solid #BDB5A0' : undefined,
               }}
             >
               {/* Decorative background number — pure texture, not readable */}
@@ -117,10 +122,10 @@ export function Challenge() {
                   position: 'absolute',
                   right: i === 0 ? '-12px' : '-4px',
                   bottom: '-24px',
-                  fontFamily: "'Instrument Serif', serif",
+                  fontFamily: "'DM Serif Display', serif",
                   fontSize: 'clamp(100px, 14vw, 180px)',
                   lineHeight: 1,
-                  color: 'rgba(201,190,166,0.28)',
+                  color: 'rgba(189, 181, 160, 0.28)',
                   pointerEvents: 'none',
                   userSelect: 'none',
                   letterSpacing: '-0.04em',
@@ -131,9 +136,9 @@ export function Challenge() {
 
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: '11px', letterSpacing: '0.1em',
-                  textTransform: 'uppercase', color: '#A86415',
+                  textTransform: 'uppercase', color: '#CC5427',
                   marginBottom: '16px',
                 }}
               >
@@ -142,15 +147,15 @@ export function Challenge() {
 
               <h3
                 style={{
-                  fontFamily: "'Instrument Serif', serif",
+                  fontFamily: "'DM Serif Display', serif",
                   fontStyle: 'italic', fontSize: '28px', lineHeight: 1.1,
-                  fontWeight: 400, color: '#0A1410', marginBottom: '16px',
+                  fontWeight: 400, color: '#191E1A', marginBottom: '16px',
                 }}
               >
                 {c.title}
               </h3>
 
-              <p style={{ fontSize: '15px', lineHeight: 1.65, color: '#524C42', margin: 0 }}>
+              <p style={{ fontSize: '15px', lineHeight: 1.65, color: '#7A7060', margin: 0 }}>
                 {c.body}
               </p>
             </div>

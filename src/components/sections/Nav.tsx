@@ -1,30 +1,31 @@
 export function Nav() {
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-pietra-300"
+      className="sticky top-0 z-50"
       style={{
         height: '64px',
-        background: 'rgba(244, 239, 227, 0.92)',
+        background: 'rgba(232, 225, 207, 0.92)',
         backdropFilter: 'blur(8px)',
+        borderBottom: '1px solid #BDB5A0',
       }}
     >
       <div
-        className="mx-auto flex h-full items-center justify-between"
-        style={{ maxWidth: '1280px', padding: '0 80px' }}
+        className="mx-auto flex h-full items-center justify-between px-6 sb:px-20"
+        style={{ maxWidth: '1280px' }}
       >
         {/* Wordmark */}
         <a
           href="/"
           className="no-underline"
           style={{
-            fontFamily: "'Instrument Serif', serif",
+            fontFamily: "'DM Serif Display', serif",
             fontSize: '28px',
             lineHeight: 1,
-            color: '#0A1410',
+            color: '#191E1A',
             fontWeight: 400,
           }}
         >
-          Tropi<em style={{ color: '#D9882B', fontStyle: 'italic' }}>X</em>
+          Tropi<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
         </a>
 
         {/* Right side */}
@@ -43,12 +44,12 @@ export function Nav() {
                 href={href}
                 style={{
                   fontSize: '14px',
-                  color: '#524C42',
+                  color: '#7A7060',
                   textDecoration: 'none',
                   transition: 'color 200ms cubic-bezier(0.2, 0.7, 0.2, 1)',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#0A1410')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#524C42')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#191E1A')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#7A7060')}
               >
                 {label}
               </a>
@@ -62,18 +63,18 @@ export function Nav() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              background: '#D9882B',
-              color: '#F4EFE3',
+              background: '#CC5427',
+              color: '#F0EADB',
               fontSize: '14px',
               fontWeight: 500,
               padding: '10px 18px',
-              borderRadius: '8px',
+              borderRadius: '4px',
               textDecoration: 'none',
               whiteSpace: 'nowrap',
               transition: 'background 200ms cubic-bezier(0.2, 0.7, 0.2, 1)',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#A86415')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#D9882B')}
+            onMouseEnter={e => (e.currentTarget.style.background = '#A8421C')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#CC5427')}
           >
             Apply for pilot
           </a>

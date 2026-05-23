@@ -45,26 +45,24 @@ export function Capabilities() {
     <section
       id="capabilities"
       ref={sectionRef}
-      style={{ background: '#0A1410', padding: '120px 0' }}
+      style={{ background: '#191E1A', padding: '96px 0' }}
     >
-      <div className="mx-auto" style={{ maxWidth: '1280px', padding: '0 80px' }}>
-        <div className="flex items-center gap-3 mb-5">
-          <div style={{ width: '24px', height: '1px', background: '#D9882B', flexShrink: 0 }} />
-          <span
-            style={{
-              fontSize: '12px', letterSpacing: '0.08em',
-              textTransform: 'uppercase', fontWeight: 500, color: '#F0C381',
-            }}
-          >
+      <div className="mx-auto px-6 sb:px-20" style={{ maxWidth: '1280px' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#CC5427', fontWeight: 500 }}>
+            CAP-03
+          </span>
+          <span aria-hidden="true">{' · '}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#BDB5A0' }}>
             WHAT THE PLATFORM ACTUALLY DOES
           </span>
         </div>
 
         <h2
           style={{
-            fontFamily: "'Instrument Serif', serif",
+            fontFamily: "'DM Serif Display', serif",
             fontSize: 'clamp(36px, 4.5vw, 56px)',
-            lineHeight: 1.05, fontWeight: 400, color: '#F4EFE3',
+            lineHeight: 1.05, fontWeight: 400, color: '#E8E1CF',
             marginBottom: '16px', maxWidth: '680px', textWrap: 'balance',
           }}
         >
@@ -73,7 +71,7 @@ export function Capabilities() {
         <p
           style={{
             fontSize: '17px', lineHeight: 1.55,
-            color: 'rgba(244, 239, 227, 0.65)',
+            color: 'rgba(232, 225, 207, 0.65)',
             maxWidth: '600px', marginBottom: '64px',
           }}
         >
@@ -87,7 +85,7 @@ export function Capabilities() {
           style={{
             gap: '64px',
             alignItems: 'center',
-            borderTop: '1px solid rgba(244, 239, 227, 0.12)',
+            borderTop: '1px solid rgba(232, 225, 207, 0.12)',
             paddingTop: '48px',
             opacity: visible ? 1 : 0,
             transform: visible ? 'none' : 'translateY(20px)',
@@ -98,9 +96,9 @@ export function Capabilities() {
           <div>
             <div
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "'IBM Plex Mono', monospace",
                 fontSize: '11px', letterSpacing: '0.1em',
-                textTransform: 'uppercase', color: '#F0C381', marginBottom: '20px',
+                textTransform: 'uppercase', color: '#CC5427', marginBottom: '20px',
               }}
             >
               DISEASE DETECTION
@@ -108,20 +106,20 @@ export function Capabilities() {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
               <span
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "'IBM Plex Mono', monospace",
                   fontVariantNumeric: 'tabular-nums',
                   fontSize: 'clamp(80px, 10vw, 128px)',
                   lineHeight: 1, letterSpacing: '-0.03em',
-                  color: '#F0C381',
+                  color: '#E8E1CF',
                 }}
               >
                 {count}
               </span>
               <span
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: 'clamp(28px, 4vw, 48px)',
-                  lineHeight: 1, color: 'rgba(240, 195, 129, 0.55)',
+                  lineHeight: 1, color: 'rgba(232, 225, 207, 0.50)',
                 }}
               >
                 days
@@ -133,9 +131,9 @@ export function Capabilities() {
           <div style={{ maxWidth: '520px' }}>
             <h4
               style={{
-                fontFamily: "'Instrument Serif', serif",
+                fontFamily: "'DM Serif Display', serif",
                 fontStyle: 'italic', fontSize: '28px', lineHeight: 1.2,
-                fontWeight: 400, color: '#F4EFE3', marginBottom: '16px',
+                fontWeight: 400, color: '#E8E1CF', marginBottom: '16px',
               }}
             >
               Phytophthora cinnamomi
@@ -143,7 +141,7 @@ export function Capabilities() {
             <p
               style={{
                 fontSize: '17px', lineHeight: 1.65,
-                color: 'rgba(244, 239, 227, 0.65)', marginBottom: '24px',
+                color: 'rgba(232, 225, 207, 0.65)', marginBottom: '24px',
               }}
             >
               Median lead time on root-rot symptoms before visible canopy
@@ -153,9 +151,9 @@ export function Capabilities() {
             </p>
             <p
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "'IBM Plex Mono', monospace",
                 fontSize: '12px', lineHeight: 1.6,
-                color: 'rgba(244, 239, 227, 0.35)',
+                color: 'rgba(232, 225, 207, 0.35)',
               }}
             >
               Measured on Sicilian Hass and Reed orchards · 3 pilot sites

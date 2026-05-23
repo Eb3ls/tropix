@@ -48,31 +48,36 @@ export function System() {
   }, [])
 
   return (
-    <section id="system" ref={sectionRef} style={{ background: '#F4EFE3', padding: '96px 0' }}>
-      <div className="mx-auto" style={{ maxWidth: '1280px', padding: '0 80px' }}>
-        <div className="flex items-center gap-3 mb-5">
-          <div style={{ width: '24px', height: '1px', background: '#D9882B', flexShrink: 0 }} />
-          <span
-            style={{
-              fontSize: '12px', letterSpacing: '0.08em',
-              textTransform: 'uppercase', fontWeight: 500, color: '#524C42',
-            }}
-          >
-            THE SYSTEM
+    <section id="system" ref={sectionRef} style={{ background: '#E8E1CF', padding: '96px 0' }}>
+      <div className="mx-auto px-6 sb:px-20" style={{ maxWidth: '1280px' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: '#CC5427', fontWeight: 500,
+          }}>
+            SYS-02
+          </span>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: '#BDB5A0',
+          }}>
+            <span aria-hidden="true">{' · '}</span>THE SYSTEM
           </span>
         </div>
 
         <h2
           style={{
-            fontFamily: "'Instrument Serif', serif",
+            fontFamily: "'DM Serif Display', serif",
             fontSize: 'clamp(36px, 4.5vw, 56px)',
-            lineHeight: 1.05, fontWeight: 400, color: '#0A1410',
+            lineHeight: 1.05, fontWeight: 400, color: '#191E1A',
             marginBottom: '16px', maxWidth: '680px', textWrap: 'balance',
           }}
         >
           Your orchard. Two layers of intelligence, one annual fee.
         </h2>
-        <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#524C42', maxWidth: '600px', marginBottom: '48px' }}>
+        <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#7A7060', maxWidth: '600px', marginBottom: '48px' }}>
           Hardware is provided on loan. There is no upfront purchase. A single
           three-year contract covers everything in the field.
         </p>
@@ -86,22 +91,22 @@ export function System() {
                 style={{
                   position: 'relative',
                   overflow: 'hidden',
-                  background: '#FAF6EC',
-                  border: '1px solid #C9BEA6',
-                  borderLeft: '3px solid #D9882B',
-                  borderRadius: '12px',
+                  background: '#F0EADB',
+                  border: '1px solid #BDB5A0',
+                  borderLeft: '2px solid #CC5427',
+                  borderRadius: '4px',
                   padding: '32px',
                   cursor: 'default',
-                  boxShadow: '0 2px 8px -4px rgba(20,39,30,0.08)',
+                  boxShadow: '0 1px 2px rgba(25, 30, 26, 0.08)',
                   opacity: visible ? 1 : 0,
                   transform: visible ? 'none' : `translateX(${idx === 0 ? '-20px' : '20px'})`,
                   transition: `opacity 560ms ${idx * 80}ms cubic-bezier(0.2,0.7,0.2,1), transform 560ms ${idx * 80}ms cubic-bezier(0.2,0.7,0.2,1), box-shadow 200ms cubic-bezier(0.2,0.7,0.2,1)`,
                 }}
                 onMouseEnter={e =>
-                  ((e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 24px -8px rgba(20,39,30,0.18)')
+                  ((e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 12px -4px rgba(25, 30, 26, 0.16)')
                 }
                 onMouseLeave={e =>
-                  ((e.currentTarget as HTMLDivElement).style.boxShadow = '0 2px 8px -4px rgba(20,39,30,0.08)')
+                  ((e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 2px rgba(25, 30, 26, 0.08)')
                 }
               >
                 {/* Decorative layer number — large, low opacity, background texture */}
@@ -111,10 +116,10 @@ export function System() {
                     position: 'absolute',
                     right: '-8px',
                     top: '-12px',
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: 'clamp(72px, 9vw, 110px)',
                     lineHeight: 1,
-                    color: 'rgba(217,136,43,0.10)',
+                    color: 'rgba(204, 84, 39, 0.07)',
                     letterSpacing: '-0.06em',
                     pointerEvents: 'none',
                     userSelect: 'none',
@@ -126,20 +131,20 @@ export function System() {
                 <div
                   style={{
                     width: '48px', height: '48px',
-                    border: '1px solid #C9BEA6', borderRadius: '8px',
+                    border: '1px solid #BDB5A0', borderRadius: '8px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     marginBottom: '20px',
-                    background: 'rgba(217,136,43,0.04)',
+                    background: 'rgba(204, 84, 39, 0.03)',
                   }}
                 >
-                  <Icon size={22} style={{ color: '#14271E' }} strokeWidth={1.75} />
+                  <Icon size={22} style={{ color: '#191E1A' }} strokeWidth={1.75} />
                 </div>
 
                 <div
                   style={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: '12px', letterSpacing: '0.1em',
-                    color: '#A86415', marginBottom: '10px',
+                    color: '#CC5427', marginBottom: '10px',
                   }}
                 >
                   LAYER {layer.number}
@@ -147,15 +152,15 @@ export function System() {
 
                 <h3
                   style={{
-                    fontFamily: "'Instrument Serif', serif",
+                    fontFamily: "'DM Serif Display', serif",
                     fontSize: '32px', lineHeight: 1.1,
-                    fontWeight: 400, color: '#0A1410', marginBottom: '14px',
+                    fontWeight: 400, color: '#191E1A', marginBottom: '14px',
                   }}
                 >
                   {layer.title}
                 </h3>
 
-                <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#524C42', marginBottom: '20px' }}>
+                <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#7A7060', marginBottom: '20px' }}>
                   {layer.description}
                 </p>
 
@@ -164,13 +169,13 @@ export function System() {
                     <li
                       key={i}
                       style={{
-                        fontSize: '14px', lineHeight: 1.5, color: '#524C42',
+                        fontSize: '14px', lineHeight: 1.5, color: '#7A7060',
                         padding: '7px 0',
-                        borderTop: '1px solid rgba(201, 190, 166, 0.5)',
+                        borderTop: '1px solid rgba(189, 181, 160, 0.5)',
                       }}
                     >
                       {layer.italicBullets?.includes(i) ? (
-                        <em style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}>{b}</em>
+                        <em style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>{b}</em>
                       ) : b}
                     </li>
                   ))}

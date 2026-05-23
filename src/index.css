@@ -7,82 +7,61 @@
 
 @theme inline {
   /* Fonts */
-  --font-sans:    'Inter Tight', system-ui, -apple-system, sans-serif;
-  --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --font-sans:    'Barlow Semi Condensed', system-ui, -apple-system, sans-serif;
+  --font-display: 'DM Serif Display', ui-serif, Georgia, serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
   /* Breakpoint */
   --breakpoint-sb: 900px;
 
-  /* TropiX palette */
-  --color-bosco-950: #0A1410;
-  --color-bosco-900: #0E1A14;
-  --color-bosco-800: #14271E;
-  --color-bosco-700: #1E3A2D;
-  --color-bosco-600: #2F4A3D;
-  --color-bosco-500: #466558;
+  /* Strumento al Sole palette */
+  --color-bg:           #E8E1CF;
+  --color-bg-elevated:  #F0EADB;
+  --color-dark:         #191E1A;
+  --color-dark-2:       #2A3330;
+  --color-mid:          #546357;
+  --color-accent:       #CC5427;
+  --color-accent-hover: #A8421C;
+  --color-stone:        #BDB5A0;
+  --color-stone-dark:   #7A7060;
 
-  --color-carta-50:  #F4EFE3;
-  --color-carta-100: #EBE4D2;
-  --color-carta-200: #DDD3BB;
-
-  --color-pietra-300: #C9BEA6;
-  --color-pietra-400: #A99E85;
-  --color-pietra-500: #7A7363;
-  --color-pietra-600: #524C42;
-
-  --color-ambra-300: #F0C381;
-  --color-ambra-500: #D9882B;
-  --color-ambra-700: #A86415;
-  --color-ambra-900: #5E380C;
-
-  --color-bg-elev: #FAF6EC;
-
-  /* shadcn semantic overrides → TropiX tokens */
-  --color-background:         #F4EFE3;
-  --color-foreground:         #0A1410;
-  --color-border:             #C9BEA6;
-  --color-ring:               #D9882B;
-  --color-primary:            #D9882B;
-  --color-primary-foreground: #F4EFE3;
-  --color-muted:              #EBE4D2;
-  --color-muted-foreground:   #7A7363;
-  --color-card:               #FAF6EC;
-  --color-card-foreground:    #0A1410;
-  --color-input:              #C9BEA6;
-  --color-secondary:          #EBE4D2;
-  --color-secondary-foreground: #0A1410;
-  --radius: 0.5rem;
+  /* shadcn semantic overrides */
+  --color-background:           #E8E1CF;
+  --color-foreground:           #191E1A;
+  --color-border:               #BDB5A0;
+  --color-ring:                 #CC5427;
+  --color-primary:              #CC5427;
+  --color-primary-foreground:   #F0EADB;
+  --color-muted:                #F0EADB;
+  --color-muted-foreground:     #7A7060;
+  --color-card:                 #F0EADB;
+  --color-card-foreground:      #191E1A;
+  --color-input:                #BDB5A0;
+  --color-secondary:            #F0EADB;
+  --color-secondary-foreground: #191E1A;
+  --radius: 0.25rem;
+  --color-accent-foreground: #F0EADB;
+  --color-destructive:       #B83A2E;
+  --color-destructive-foreground: #F0EADB;
+  --color-popover:           #F0EADB;
+  --color-popover-foreground: #191E1A;
 }
 
 :root {
   /* Raw CSS custom properties for inline styles */
-  --bosco-950: #0A1410;
-  --bosco-900: #0E1A14;
-  --bosco-800: #14271E;
-  --bosco-700: #1E3A2D;
-  --bosco-600: #2F4A3D;
-  --bosco-500: #466558;
+  --bg:           #E8E1CF;
+  --bg-elevated:  #F0EADB;
+  --dark:         #191E1A;
+  --dark-2:       #2A3330;
+  --mid:          #546357;
+  --accent:       #CC5427;
+  --accent-hover: #A8421C;
+  --stone:        #BDB5A0;
+  --stone-dark:   #7A7060;
 
-  --carta-50:  #F4EFE3;
-  --carta-100: #EBE4D2;
-  --carta-200: #DDD3BB;
-
-  --pietra-300: #C9BEA6;
-  --pietra-400: #A99E85;
-  --pietra-500: #7A7363;
-  --pietra-600: #524C42;
-
-  --ambra-300: #F0C381;
-  --ambra-500: #D9882B;
-  --ambra-700: #A86415;
-  --ambra-900: #5E380C;
-
-  --bg-elev: #FAF6EC;
-
-  --shadow-1: 0 1px 2px rgba(20, 39, 30, 0.08);
-  --shadow-2: 0 4px 12px -4px rgba(20, 39, 30, 0.16);
-  --shadow-3: 0 16px 40px -12px rgba(20, 39, 30, 0.24);
+  --shadow-1: 0 1px 2px rgba(25, 30, 26, 0.08);
+  --shadow-2: 0 4px 12px -4px rgba(25, 30, 26, 0.16);
+  --shadow-3: 0 16px 40px -12px rgba(25, 30, 26, 0.24);
 
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -102,24 +81,23 @@
     scroll-padding-top: 64px;
   }
   body {
-    background-color: #F4EFE3;
-    color: #0A1410;
-    font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--dark);
+    font-family: var(--font-sans);
     font-size: 15px;
     line-height: 22px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    font-feature-settings: 'ss01', 'cv11';
     margin: 0;
   }
   ::selection {
-    background: #F0C381;
-    color: #0A1410;
+    background: var(--accent);
+    color: var(--bg-elevated);
   }
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #F4EFE3, 0 0 0 4px #D9882B;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
     border-radius: 4px;
   }
   @media (prefers-reduced-motion: reduce) {

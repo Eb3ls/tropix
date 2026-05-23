@@ -30,36 +30,30 @@ export function Team() {
       id="team"
       ref={sectionRef}
       style={{
-        background: '#EBE4D2',
-        borderTop: '1px solid #C9BEA6',
+        background: '#E8E1CF',
+        borderTop: '1px solid #BDB5A0',
         padding: '96px 0',
       }}
     >
-      <div className="mx-auto" style={{ maxWidth: '1280px', padding: '0 80px' }}>
+      <div className="mx-auto px-6 sb:px-20" style={{ maxWidth: '1280px' }}>
         {/* Header */}
-        <div className="flex items-center gap-3 mb-5">
-          <div style={{ width: '24px', height: '1px', background: '#D9882B', flexShrink: 0 }} />
-          <span
-            style={{
-              fontSize: '12px', letterSpacing: '0.08em',
-              textTransform: 'uppercase', fontWeight: 500, color: '#524C42',
-            }}
-          >
-            THE TEAM
-          </span>
+        <div style={{ marginBottom: '24px' }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#CC5427', fontWeight: 500 }}>TEM-07</span>
+          <span aria-hidden="true">{' · '}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#BDB5A0' }}>THE TEAM</span>
         </div>
 
         <h2
           style={{
-            fontFamily: "'Instrument Serif', serif",
+            fontFamily: "'DM Serif Display', serif",
             fontSize: 'clamp(36px, 4.5vw, 56px)',
-            lineHeight: 1.05, fontWeight: 400, color: '#0A1410',
+            lineHeight: 1.05, fontWeight: 400, color: '#191E1A',
             marginBottom: '16px', textWrap: 'balance',
           }}
         >
           Built in Trento. Tested in Sicily.
         </h2>
-        <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#524C42', maxWidth: '560px', marginBottom: '56px' }}>
+        <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#7A7060', maxWidth: '560px', marginBottom: '56px' }}>
           Five founders: three AI software engineers, one industrial engineer,
           one computer-science student. Seed round in progress.
         </p>
@@ -70,10 +64,10 @@ export function Team() {
             <div
               key={i}
               style={{
-                background: '#F4EFE3',
-                border: '1px solid #C9BEA6',
-                borderTop: '2px solid #D9882B',
-                borderRadius: '12px',
+                background: '#F0EADB',
+                border: '1px solid #BDB5A0',
+                borderTop: '2px solid #CC5427',
+                borderRadius: '4px',
                 padding: '20px',
                 opacity: visible ? 1 : 0,
                 transform: visible ? 'none' : 'translateY(16px)',
@@ -84,26 +78,26 @@ export function Team() {
               <div
                 style={{
                   aspectRatio: '1',
-                  background: 'linear-gradient(135deg, #14271E 0%, #2F4A3D 100%)',
-                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #191E1A 0%, #2A3330 100%)',
+                  borderRadius: '4px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   marginBottom: '14px',
                 }}
               >
                 <span
                   style={{
-                    fontFamily: "'Instrument Serif', serif",
+                    fontFamily: "'DM Serif Display', serif",
                     fontStyle: 'normal', fontSize: '36px',
-                    color: '#F0C381', lineHeight: 1,
+                    color: '#CC5427', lineHeight: 1,
                   }}
                 >
                   {f.initial}
                 </span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#0A1410', marginBottom: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#191E1A', marginBottom: '4px' }}>
                 {f.name}
               </div>
-              <div style={{ fontSize: '12px', color: '#7A7363' }}>{f.role}</div>
+              <div style={{ fontSize: '12px', color: '#7A7060' }}>{f.role}</div>
             </div>
           ))}
         </div>

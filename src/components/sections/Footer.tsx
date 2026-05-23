@@ -29,8 +29,8 @@ const nav = [
 
 export function Footer() {
   return (
-    <footer style={{ background: '#0A1410', padding: '64px 0 0' }}>
-      <div className="mx-auto" style={{ maxWidth: '1280px', padding: '0 80px' }}>
+    <footer style={{ background: '#191E1A', padding: '64px 0 0' }}>
+      <div className="mx-auto px-6 sb:px-20" style={{ maxWidth: '1280px' }}>
         {/* Main grid */}
         <div
           className="grid grid-cols-1 sb:grid-cols-[2fr_1fr_1fr_1fr]"
@@ -40,21 +40,21 @@ export function Footer() {
           <div>
             <div
               style={{
-                fontFamily: "'Instrument Serif', serif",
+                fontFamily: "'DM Serif Display', serif",
                 fontSize: '28px',
                 lineHeight: 1,
-                color: '#F4EFE3',
+                color: '#E8E1CF',
                 fontWeight: 400,
                 marginBottom: '16px',
               }}
             >
-              Tropi<em style={{ color: '#D9882B', fontStyle: 'italic' }}>X</em>
+              Tropi<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
             </div>
             <p
               style={{
                 fontSize: '14px',
                 lineHeight: 1.55,
-                color: 'rgba(244, 239, 227, 0.75)',
+                color: 'rgba(232, 225, 207, 0.75)',
                 maxWidth: '280px',
               }}
             >
@@ -68,10 +68,11 @@ export function Footer() {
             <div key={col.heading}>
               <p
                 style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: '11px',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#F0C381',
+                  color: '#CC5427',
                   marginBottom: '16px',
                   fontWeight: 500,
                 }}
@@ -85,12 +86,12 @@ export function Footer() {
                       href={link.href}
                       style={{
                         fontSize: '14px',
-                        color: 'rgba(244, 239, 227, 0.75)',
+                        color: 'rgba(232, 225, 207, 0.70)',
                         textDecoration: 'none',
                         transition: 'color 200ms cubic-bezier(0.2, 0.7, 0.2, 1)',
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.color = '#F4EFE3')}
-                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(244, 239, 227, 0.75)')}
+                      onMouseEnter={e => (e.currentTarget.style.color = '#E8E1CF')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232, 225, 207, 0.70)')}
                     >
                       {link.label}
                     </a>
@@ -105,11 +106,11 @@ export function Footer() {
         <div
           className="flex flex-wrap justify-between items-center gap-4"
           style={{
-            borderTop: '1px solid rgba(244, 239, 227, 0.15)',
+            borderTop: '1px solid rgba(232, 225, 207, 0.12)',
             padding: '24px 0 32px',
           }}
         >
-          <span style={{ fontSize: '12px', color: 'rgba(244, 239, 227, 0.45)' }}>
+          <span style={{ fontSize: '12px', color: 'rgba(232, 225, 207, 0.40)' }}>
             © 2026 TropiX S.r.l. · Trento, Italia
           </span>
           <div style={{ display: 'flex', gap: '20px' }}>
@@ -119,12 +120,12 @@ export function Footer() {
                 href="#"
                 style={{
                   fontSize: '12px',
-                  color: 'rgba(244, 239, 227, 0.45)',
+                  color: 'rgba(232, 225, 207, 0.40)',
                   textDecoration: 'none',
                   transition: 'color 200ms cubic-bezier(0.2, 0.7, 0.2, 1)',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(244, 239, 227, 0.75)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(244, 239, 227, 0.45)')}
+                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(232, 225, 207, 0.70)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232, 225, 207, 0.40)')}
               >
                 {label}
               </a>

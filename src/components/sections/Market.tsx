@@ -30,36 +30,31 @@ export function Market() {
     <section
       id="market"
       style={{
-        background: '#EBE4D2',
-        borderTop: '1px solid #C9BEA6',
-        borderBottom: '1px solid #C9BEA6',
+        background: '#E8E1CF',
+        borderTop: '1px solid #BDB5A0',
+        borderBottom: '1px solid #BDB5A0',
         padding: '96px 0',
       }}
     >
-      <div className="mx-auto" style={{ maxWidth: '1280px', padding: '0 80px' }}>
+      <div className="mx-auto px-6 sb:px-20" style={{ maxWidth: '1280px' }}>
         {/* Header */}
-        <div className="flex items-center gap-3 mb-5">
-          <div style={{ width: '24px', height: '1px', background: '#D9882B', flexShrink: 0 }} />
-          <span
-            style={{
-              fontSize: '12px',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              fontWeight: 500,
-              color: '#A86415',
-            }}
-          >
+        <div style={{ marginBottom: '24px' }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#CC5427', fontWeight: 500 }}>
+            MKT-05
+          </span>
+          <span aria-hidden="true">{' · '}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#BDB5A0' }}>
             THE OPPORTUNITY
           </span>
         </div>
 
         <h2
           style={{
-            fontFamily: "'Instrument Serif', serif",
+            fontFamily: "'DM Serif Display', serif",
             fontSize: 'clamp(36px, 4.5vw, 56px)',
             lineHeight: 1.05,
             fontWeight: 400,
-            color: '#0A1410',
+            color: '#191E1A',
             marginBottom: '20px',
             maxWidth: '760px',
             textWrap: 'balance',
@@ -68,11 +63,11 @@ export function Market() {
           A €172 million European market with no vertical incumbent.
         </h2>
 
-        <p style={{ fontSize: '19px', lineHeight: 1.5, color: '#524C42', maxWidth: '640px' }}>
+        <p style={{ fontSize: '19px', lineHeight: 1.5, color: '#7A7060', maxWidth: '640px' }}>
           Mediterranean avocado and mango cultivation has grown faster than any
           other premium fruit in the basin. Existing AgriTech platforms target
           cereals, vineyards, and large-scale arable. None of them speak{' '}
-          <em style={{ fontFamily: "'Instrument Serif', serif" }}>drupacea</em>.
+          <em style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>drupacea</em>.
         </p>
 
         {/* Two-column grid */}
@@ -86,7 +81,7 @@ export function Market() {
               <div
                 key={i}
                 style={{
-                  borderTop: '1px solid #C9BEA6',
+                  borderTop: '1px solid #BDB5A0',
                   padding: '28px 0',
                   display: 'flex',
                   flexDirection: 'column',
@@ -96,41 +91,41 @@ export function Market() {
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                   <span
                     style={{
-                      fontFamily: "'JetBrains Mono', monospace",
+                      fontFamily: "'IBM Plex Mono', monospace",
                       fontVariantNumeric: 'tabular-nums',
                       fontSize: '52px',
                       lineHeight: 1,
                       letterSpacing: '-0.02em',
-                      color: '#0A1410',
+                      color: '#191E1A',
                     }}
                   >
                     {fig.value}
                   </span>
                   <span
                     style={{
-                      fontFamily: "'JetBrains Mono', monospace",
+                      fontFamily: "'IBM Plex Mono', monospace",
                       fontSize: '28px',
                       lineHeight: 1,
-                      color: '#7A7363',
+                      color: '#7A7060',
                     }}
                   >
                     {fig.unit}
                   </span>
                 </div>
-                <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#524C42' }}>
+                <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#7A7060' }}>
                   {fig.label}
                 </p>
               </div>
             ))}
-            <div style={{ borderTop: '1px solid #C9BEA6' }} />
+            <div style={{ borderTop: '1px solid #BDB5A0' }} />
           </div>
 
           {/* Right: competitor card */}
           <div
             style={{
-              background: '#F4EFE3',
-              border: '1px solid #C9BEA6',
-              borderRadius: '12px',
+              background: '#F0EADB',
+              border: '1px solid #BDB5A0',
+              borderRadius: '4px',
               padding: '32px',
             }}
           >
@@ -139,9 +134,9 @@ export function Market() {
                 fontSize: '14px',
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
-                color: '#524C42',
+                color: '#7A7060',
                 marginBottom: '20px',
-                fontFamily: "'Inter Tight', sans-serif",
+                fontFamily: "'IBM Plex Mono', monospace",
                 fontWeight: 500,
               }}
             >
@@ -157,15 +152,20 @@ export function Market() {
                     alignItems: 'center',
                     fontSize: '15px',
                     fontWeight: c.highlight ? 600 : 400,
-                    color: '#0A1410',
+                    color: '#191E1A',
+                    ...(c.highlight ? {
+                      borderLeft: '2px solid #CC5427',
+                      paddingLeft: '8px',
+                      background: 'rgba(204, 84, 39, 0.04)',
+                    } : {}),
                   }}
                 >
                   <span>{c.name}</span>
                   <span
                     style={{
-                      fontFamily: "'JetBrains Mono', monospace",
+                      fontFamily: "'IBM Plex Mono', monospace",
                       fontSize: '12px',
-                      color: c.highlight ? '#A86415' : '#7A7363',
+                      color: c.highlight ? '#CC5427' : '#BDB5A0',
                     }}
                   >
                     {c.tag}
