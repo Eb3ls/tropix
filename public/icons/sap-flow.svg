@@ -1,0 +1,13 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  
+  <path d="M8 2v20"></path>
+  <path d="M14 2v20"></path>
+  
+  <rect x="5" y="10" width="12" height="5" rx="1.2"></rect>
+  
+  <circle cx="9" cy="12.5" r="0.9" fill="currentColor" stroke="none"></circle>
+  
+  <path d="M19 11.2c1 0.6 1 2 0 2.6"></path>
+  <path d="M21 9.6c2.2 1.2 2.2 4 0 5.2"></path>
+</svg>
