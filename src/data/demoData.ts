@@ -127,7 +127,7 @@ function generateTreeCoords(): Array<{ cx: number; cy: number }> {
 
 export const TREE_COORDS = generateTreeCoords()
 
-export function conditionCount(p: { disease?: unknown; irrigation?: unknown; fertilizer?: unknown }): number {
+export function conditionCount(p: Partial<Pick<Plant, 'disease' | 'irrigation' | 'fertilizer'>>): number {
   return (p.disease ? 1 : 0) + (p.irrigation ? 1 : 0) + (p.fertilizer ? 1 : 0)
 }
 
@@ -297,19 +297,24 @@ export function plantLabel(plant: Plant): string {
 
 function buildPlants(): Plant[] {
   return Array.from({ length: 120 }, (_, i) => {
-    const zone = getZone(i)
-    const sp   = SPECIAL[i]
+    const zone    = getZone(i)
+    const sp      = SPECIAL[i]
+    const status: PlantStatus = sp?.status ?? 'healthy'
     const base = {
-      id: i + 1, gridIndex: i, zone,
+      id: i + 1,
+      gridIndex: i,
+      zone,
       cultivar: CULTIVARS[zone],
-      status: sp?.status ?? 'healthy' as PlantStatus,
-      ...sp,
+      status,
+      disease:    sp?.disease,
+      irrigation: sp?.irrigation,
+      fertilizer: sp?.fertilizer,
     }
     return {
       ...base,
-      coords: TREE_COORDS[i],
+      coords:         TREE_COORDS[i],
       conditionCount: conditionCount(base),
-    } as Plant
+    }
   })
 }
 
