@@ -5,6 +5,7 @@ import { Challenge } from '@/components/sections/Challenge'
 import { System } from '@/components/sections/System'
 import { Capabilities } from '@/components/sections/Capabilities'
 import { InSeason } from '@/components/sections/InSeason'
+import { Market } from '@/components/sections/Market'
 import { Pilot } from '@/components/sections/Pilot'
 import { Team } from '@/components/sections/Team'
 import { Footer } from '@/components/sections/Footer'
@@ -21,6 +22,7 @@ function Landing() {
         <System />
         <Capabilities />
         <InSeason />
+        <Market />
         <Pilot />
         <Team />
       </main>
@@ -40,7 +42,18 @@ export default function App() {
     const handleHash = () => {
       if (window.location.hash === '#/platform') setView('platform')
       else if (window.location.hash === '#/demo') setView('demo')
-      else { setView('landing'); window.scrollTo(0, 0) }
+      else {
+        setView('landing')
+        const anchor = window.location.hash.slice(1)
+        if (anchor) {
+          // Wait for landing page to render before scrolling to the anchor
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' })
+          }))
+        } else {
+          window.scrollTo(0, 0)
+        }
+      }
     }
     window.addEventListener('hashchange', handleHash)
     return () => window.removeEventListener('hashchange', handleHash)

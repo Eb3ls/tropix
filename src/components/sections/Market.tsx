@@ -60,7 +60,7 @@ export function Market() {
             textWrap: 'balance',
           }}
         >
-          A €172 million European market with no vertical incumbent.
+          A €171.8 million European market with no vertical incumbent.
         </h2>
 
         <p style={{ fontSize: '19px', lineHeight: 1.5, color: '#7A7060', maxWidth: '640px' }}>

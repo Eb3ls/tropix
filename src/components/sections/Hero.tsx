@@ -1,12 +1,12 @@
-import { ArrowRight, ArrowDownRight } from 'lucide-react'
+import { ArrowRight, ArrowDown } from 'lucide-react'
 import type { CSSProperties } from 'react'
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
 
 const stats: { label: string; value: string }[] = [
-  { label: 'DISEASE DETECTION LEAD', value: '14 days' },
-  { label: 'SENSOR GRANULARITY', value: 'Per tree' },
-  { label: 'PILOT COHORT', value: 'Q2 2026 · Sicily' },
+  { label: 'CROPS COVERED',    value: 'Avocado · Mango' },
+  { label: 'FLIGHT FREQUENCY', value: 'Daily' },
+  { label: 'PILOT COHORT',     value: 'Q2 2026 · Sicily' },
 ]
 
 const instruments = [
@@ -133,9 +133,8 @@ export function Hero() {
               maxWidth: '520px', marginBottom: '40px',
             }}
           >
-            The first precision-farming platform trained specifically on{' '}
-            <em>Persea americana</em> and{' '}
-            <em>Mangifera indica</em>. Disease detection 14 days before visible symptoms. Per tree.
+            Pathogen detection before visible symptoms, water-stress monitoring, and yield
+            forecasting — at per-tree resolution.
           </p>
 
           {/* CTAs */}
@@ -155,7 +154,7 @@ export function Hero() {
               onMouseEnter={e => (e.currentTarget.style.background = '#A8421C')}
               onMouseLeave={e => (e.currentTarget.style.background = '#CC5427')}
             >
-              Apply for 2026 Sicily pilot <ArrowRight size={15} />
+              Apply for pilot <ArrowDown size={15} />
             </a>
 
             {/* Secondary */}
@@ -180,7 +179,7 @@ export function Hero() {
                 e.currentTarget.style.color = 'rgba(232,225,207,0.75)'
               }}
             >
-              See a full season <ArrowDownRight size={15} />
+              See a full season <ArrowDown size={15} />
             </a>
 
             {/* Demo link */}

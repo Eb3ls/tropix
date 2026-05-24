@@ -13,11 +13,11 @@ export function Pilot() {
             <div style={{ marginBottom: '24px' }}>
               <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#CC5427', fontWeight: 500 }}>PIL-06</span>
               <span aria-hidden="true">{' · '}</span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#BDB5A0' }}>SICILY PILOT · 2026 COHORT</span>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#BDB5A0' }}>SOUTH ITALY PILOT · 2026 COHORT</span>
             </div>
 
             <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(32px, 4vw, 48px)', lineHeight: 1.08, fontWeight: 400, color: '#191E1A', marginBottom: '20px', textWrap: 'balance' }}>
-              Eight farms will have the most precise view of their avocado and mango in Sicily. Yours could be one of them.
+              Eight farms will have the most precise view of their avocado and mango. Yours could be one of them.
             </h2>
 
             <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#7A7060', marginBottom: '16px' }}>
