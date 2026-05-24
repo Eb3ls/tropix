@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react'
 import { Plus, Minus, Crosshair } from 'lucide-react'
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
   onReset: () => void
 }
 
-const btnStyle = (disabled: boolean): React.CSSProperties => ({
+const btnStyle = (disabled: boolean): CSSProperties => ({
   width: '28px',
   height: '28px',
   display: 'flex',
@@ -59,10 +60,10 @@ export function ZoomControls({ zoom, minZoom, maxZoom, onZoomIn, onZoomOut, onRe
 
       <button
         onClick={onReset}
-        disabled={zoom === 1}
+        disabled={Math.abs(zoom - 1) < 0.001}
         aria-label="Reset zoom"
-        style={btnStyle(zoom === 1)}
-        onMouseEnter={e => { if (zoom !== 1) e.currentTarget.style.background = 'rgba(25,30,26,0.95)' }}
+        style={btnStyle(Math.abs(zoom - 1) < 0.001)}
+        onMouseEnter={e => { if (Math.abs(zoom - 1) >= 0.001) e.currentTarget.style.background = 'rgba(25,30,26,0.95)' }}
         onMouseLeave={e => { e.currentTarget.style.background = 'rgba(25,30,26,0.75)' }}
       >
         <Crosshair size={13} aria-hidden="true" />

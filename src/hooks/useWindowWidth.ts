@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react'
  * Used to switch between cockpit (≥900px) and mobile gate (<900px).
  */
 export function useWindowWidth(): number {
-  const [width, setWidth] = useState(() => window.innerWidth)
+  const [width, setWidth] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth : 0
+  )
 
   useEffect(() => {
     const handle = () => setWidth(window.innerWidth)

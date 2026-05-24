@@ -1,7 +1,8 @@
+import { type ReactNode } from 'react'
 import { Sun, Cloud, CloudSun } from 'lucide-react'
 import { DEMO_WEATHER, type WeatherDay } from '../../data/demoData'
 
-const ICONS: Record<WeatherDay['condition'], React.ReactNode> = {
+const ICONS: Record<WeatherDay['condition'], ReactNode> = {
   'sunny':         <Sun        size={12} aria-hidden="true" />,
   'partly-cloudy': <CloudSun   size={12} aria-hidden="true" />,
   'cloudy':        <Cloud      size={12} aria-hidden="true" />,
