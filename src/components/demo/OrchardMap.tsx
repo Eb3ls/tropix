@@ -69,8 +69,8 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
         return newScale
       })
     }
-    el.addEventListener('wheel', onWheel, { passive: false })
-    return () => el.removeEventListener('wheel', onWheel, { passive: false })
+    el.addEventListener('wheel', onWheel as EventListener, { passive: false } as AddEventListenerOptions)
+    return () => el.removeEventListener('wheel', onWheel as EventListener, { passive: false } as AddEventListenerOptions)
   }, [clampTranslate])
 
   // ── Drag to pan (only when zoomed in) ──────────────────────────────────────
