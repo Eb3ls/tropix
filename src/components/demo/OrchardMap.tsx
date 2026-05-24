@@ -26,9 +26,11 @@ interface Props {
 type Transform = { scale: number; x: number; y: number }
 
 export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onTreeClick }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [tf, setTf]  = useState<Transform>({ scale: 1, x: 0, y: 0 })
-  const dragRef      = useRef<{ startX: number; startY: number; tx: number; ty: number } | null>(null)
+  const containerRef  = useRef<HTMLDivElement>(null)
+  const [tf, setTf]   = useState<Transform>({ scale: 1, x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  /** Stores only the *previous* mouse position — no stale transform snapshot. */
+  const dragRef       = useRef<{ prevX: number; prevY: number } | null>(null)
 
   // ── Clamp translate so the image stays mostly on-screen ──────────────────
   const clamp = useCallback((tx: number, ty: number, s: number): { x: number; y: number } => {
@@ -74,23 +76,33 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
   }, [])
 
   // ── Drag to pan (only when zoomed in) ─────────────────────────────────────
+  // Delta-based: dragRef stores only the *previous* mouse position.
+  // Each move computes dx/dy from prev, then applies to prev.x/prev.y via
+  // the functional updater — no stale closure on the initial transform.
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (tf.scale <= 1) return
-    dragRef.current = { startX: e.clientX, startY: e.clientY, tx: tf.x, ty: tf.y }
-  }, [tf])
+    e.preventDefault()
+    dragRef.current = { prevX: e.clientX, prevY: e.clientY }
+    setIsDragging(true)
+  }, [tf.scale])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const drag = dragRef.current
       if (!drag) return
-      const dx = e.clientX - drag.startX
-      const dy = e.clientY - drag.startY
+      const dx = e.clientX - drag.prevX
+      const dy = e.clientY - drag.prevY
+      drag.prevX = e.clientX   // advance the anchor every frame
+      drag.prevY = e.clientY
       setTf(prev => {
-        const clamped = clamp(drag.tx + dx, drag.ty + dy, prev.scale)
+        const clamped = clamp(prev.x + dx, prev.y + dy, prev.scale)
         return { ...prev, x: clamped.x, y: clamped.y }
       })
     }
-    const handleMouseUp = () => { dragRef.current = null }
+    const handleMouseUp = () => {
+      dragRef.current = null
+      setIsDragging(false)
+    }
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup',   handleMouseUp)
     return () => {
@@ -162,7 +174,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
         position: 'relative',
         overflow: 'hidden',
         background: '#191E1A',
-        cursor: tf.scale > 1 ? 'grab' : 'default',
+        cursor: isDragging ? 'grabbing' : tf.scale > 1 ? 'grab' : 'default',
         userSelect: 'none',
       }}
     >

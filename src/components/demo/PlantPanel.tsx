@@ -235,14 +235,14 @@ export function PlantPanel({ plant, onClose, treated, overdue, onMarkTreated }: 
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               gap: '6px', width: '100%', padding: '9px 12px',
-              background: 'transparent', border: '1px solid #BDB5A0',
+              background: 'transparent', border: '1px solid rgba(204,84,39,0.4)',
               borderRadius: '4px', cursor: 'pointer',
               fontFamily: "'Barlow Semi Condensed', sans-serif",
-              fontSize: '13px', fontWeight: 500, color: '#7A7060',
+              fontSize: '13px', fontWeight: 500, color: '#CC5427',
               transition: 'all 180ms',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(58,122,78,0.07)'; e.currentTarget.style.borderColor = 'rgba(58,122,78,0.25)'; e.currentTarget.style.color = '#3A7A4E' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = '#BDB5A0'; e.currentTarget.style.color = '#7A7060' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#CC5427'; e.currentTarget.style.borderColor = '#CC5427'; e.currentTarget.style.color = '#F0EADB' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(204,84,39,0.4)'; e.currentTarget.style.color = '#CC5427' }}
           >
             ✓ Mark treatment done
           </button>

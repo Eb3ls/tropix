@@ -185,7 +185,7 @@ export function AlertSidebar({
           fontSize: '10px',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
-          color: '#BDB5A0',
+          color: '#546357',
         }}>
           Actions Today · {pendingActions.length}
         </div>

@@ -111,7 +111,7 @@ export function Demo() {
             color: '#E8E1CF',
             marginBottom: '28px',
           }}>
-            Trop<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
+            Tropi<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
           </div>
 
           <div style={{
@@ -191,7 +191,7 @@ export function Demo() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 24px',
-        height: '48px',
+        height: '52px',
         flexShrink: 0,
         background: '#F0EADB',
         borderBottom: '1px solid #BDB5A0',
@@ -206,8 +206,8 @@ export function Demo() {
 
         {/* Left: wordmark + farm name + KPI chips */}
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '19px', color: '#191E1A', fontWeight: 400 }}>
-            Trop<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
+          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '20px', color: '#191E1A', fontWeight: 400 }}>
+            Tropi<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
           </span>
 
           <div aria-hidden="true" style={{ width: '1px', height: '18px', background: '#BDB5A0' }} />
