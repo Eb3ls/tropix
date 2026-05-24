@@ -25,8 +25,8 @@ export function AlertSidebar({
     <div style={{
       width: '220px',
       flexShrink: 0,
-      background: '#191E1A',
-      borderRight: '1px solid rgba(232,225,207,0.07)',
+      background: '#F0EADB',
+      borderRight: '1px solid #BDB5A0',
       display: 'flex',
       flexDirection: 'column',
       overflowY: 'auto',
@@ -36,28 +36,28 @@ export function AlertSidebar({
       {/* ── Farm health chip ── */}
       <div style={{
         padding: '14px 16px 10px',
-        borderBottom: '1px solid rgba(232,225,207,0.07)',
+        borderBottom: '1px solid #BDB5A0',
         display: 'flex',
         alignItems: 'center',
         gap: '10px',
       }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3A7A4E', display: 'inline-block' }} />
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: 'rgba(232,225,207,0.6)', fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: '#7A7060', fontVariantNumeric: 'tabular-nums' }}>
             {healthyCount} healthy
           </span>
         </span>
-        <span style={{ color: 'rgba(232,225,207,0.2)', fontSize: '10px' }}>·</span>
+        <span style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#B83A2E', display: 'inline-block' }} />
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: 'rgba(232,225,207,0.6)', fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: '#7A7060', fontVariantNumeric: 'tabular-nums' }}>
             {alertCount} alerts
           </span>
         </span>
       </div>
 
       {/* ── Weather strip ── */}
-      <div style={{ borderBottom: '1px solid rgba(232,225,207,0.07)' }}>
+      <div style={{ borderBottom: '1px solid #BDB5A0' }}>
         <WeatherStrip />
       </div>
 
@@ -88,13 +88,13 @@ export function AlertSidebar({
                 width: '100%',
                 textAlign: 'left',
                 padding: '7px 16px',
-                background: isSelected ? 'rgba(232,225,207,0.06)' : 'transparent',
+                background: isSelected ? 'rgba(25,30,26,0.06)' : 'transparent',
                 border: 'none',
                 borderLeft: `2px solid ${isTreated ? '#B8860B' : STATUS_COLOR[plant.status]}`,
                 cursor: 'pointer',
                 transition: 'background 150ms',
               }}
-              onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(232,225,207,0.04)' }}
+              onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(25,30,26,0.04)' }}
               onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}
             >
               {/* Tree label + overdue */}
@@ -103,7 +103,7 @@ export function AlertSidebar({
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: '12px',
                   fontWeight: 700,
-                  color: '#E8E1CF',
+                  color: '#191E1A',
                   fontVariantNumeric: 'tabular-nums',
                 }}>
                   {plantLabel(plant)}
@@ -152,7 +152,7 @@ export function AlertSidebar({
                   fontFamily: "'DM Serif Display', serif",
                   fontStyle: 'italic',
                   fontSize: '11px',
-                  color: 'rgba(232,225,207,0.55)',
+                  color: '#7A7060',
                   marginBottom: '1px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -167,7 +167,7 @@ export function AlertSidebar({
                 <div style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: '10px',
-                  color: 'rgba(204,84,39,0.8)',
+                  color: '#CC5427',
                 }}>
                   {daysEarly}d before symptoms
                 </div>
@@ -178,14 +178,14 @@ export function AlertSidebar({
       </div>
 
       {/* ── Action list ── */}
-      <div style={{ padding: '12px 0 16px', borderTop: '1px solid rgba(232,225,207,0.07)' }}>
+      <div style={{ padding: '12px 0 16px', borderTop: '1px solid #BDB5A0' }}>
         <div style={{
           padding: '0 16px 8px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '10px',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
-          color: 'rgba(232,225,207,0.35)',
+          color: '#BDB5A0',
         }}>
           Actions Today · {pendingActions.length}
         </div>
@@ -205,12 +205,12 @@ export function AlertSidebar({
                 width: '100%',
                 textAlign: 'left',
                 padding: '6px 16px',
-                background: isHighlighted ? 'rgba(232,225,207,0.06)' : 'transparent',
+                background: isHighlighted ? 'rgba(25,30,26,0.06)' : 'transparent',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'background 150ms',
               }}
-              onMouseEnter={e => { if (!isHighlighted) e.currentTarget.style.background = 'rgba(232,225,207,0.04)' }}
+              onMouseEnter={e => { if (!isHighlighted) e.currentTarget.style.background = 'rgba(25,30,26,0.04)' }}
               onMouseLeave={e => { if (!isHighlighted) e.currentTarget.style.background = 'transparent' }}
             >
               {/* Priority badge */}
@@ -234,7 +234,7 @@ export function AlertSidebar({
                 <div style={{
                   fontFamily: "'Barlow Semi Condensed', sans-serif",
                   fontSize: '12px',
-                  color: 'rgba(232,225,207,0.75)',
+                  color: '#191E1A',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -244,7 +244,7 @@ export function AlertSidebar({
                 <div style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: '10px',
-                  color: 'rgba(232,225,207,0.3)',
+                  color: '#7A7060',
                 }}>
                   {item.scheduledFor}
                   {item.plantCount > 1 && ` · ${item.plantCount} trees`}

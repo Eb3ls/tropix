@@ -90,12 +90,16 @@ export function TreeCircles({ plants, selectedId, highlightedIds, treatedIds, zo
               style={isPulsing ? { animation: 'treePulse 2.2s ease-in-out infinite' } : undefined}
             />
 
-            {/* Center dot */}
+            {/* Center dot — terracotta pin, opacity varies by status */}
             <circle
               cx={cx} cy={cy}
-              r={0.35 / zoom}
-              fill={strokeColor}
-              opacity={0.9}
+              r={0.4 / zoom}
+              fill={isTreated ? '#B8860B' : '#CC5427'}
+              opacity={
+                isSelected || isHighlighted ? 1
+                : plant.status === 'healthy' ? 0.28
+                : 0.8
+              }
             />
 
             {/* Multi-condition badge ×N (offset top-right of ring) */}

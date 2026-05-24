@@ -179,7 +179,7 @@ export function Demo() {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'hidden',
-      background: '#191E1A',
+      background: '#E8E1CF',
       fontFamily: "'Barlow Semi Condensed', sans-serif",
     }}>
 
@@ -193,26 +193,26 @@ export function Demo() {
         padding: '0 24px',
         height: '48px',
         flexShrink: 0,
-        background: '#191E1A',
-        borderBottom: '1px solid rgba(232,225,207,0.08)',
+        background: '#F0EADB',
+        borderBottom: '1px solid #BDB5A0',
         zIndex: 20,
       }}>
         {/* Grain */}
         <div aria-hidden="true" style={{
           position: 'absolute', inset: 0,
           backgroundImage: GRAIN, backgroundSize: '256px 256px',
-          opacity: 0.025, mixBlendMode: 'overlay', pointerEvents: 'none',
+          opacity: 0.04, mixBlendMode: 'multiply', pointerEvents: 'none',
         }} />
 
         {/* Left: wordmark + farm name + KPI chips */}
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '19px', color: '#E8E1CF', fontWeight: 400 }}>
+          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '19px', color: '#191E1A', fontWeight: 400 }}>
             Trop<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
           </span>
 
-          <div aria-hidden="true" style={{ width: '1px', height: '18px', background: 'rgba(232,225,207,0.1)' }} />
+          <div aria-hidden="true" style={{ width: '1px', height: '18px', background: '#BDB5A0' }} />
 
-          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '12px', color: 'rgba(232,225,207,0.5)' }}>
+          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '12px', color: '#7A7060' }}>
             Az. Agr. Greco · Ragusa, Sicilia · 8.3 ha
           </span>
 
@@ -225,7 +225,7 @@ export function Demo() {
             <span key={chip.label} style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: '10px',
-              color: chip.color ?? 'rgba(232,225,207,0.35)',
+              color: chip.color ?? '#BDB5A0',
               letterSpacing: '0.06em',
             }}>
               {chip.label}
@@ -255,11 +255,11 @@ export function Demo() {
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
               fontFamily: "'IBM Plex Mono', monospace", fontSize: '10px',
-              letterSpacing: '0.08em', color: 'rgba(232,225,207,0.25)',
+              letterSpacing: '0.08em', color: '#BDB5A0',
               transition: 'color 180ms',
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.55)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.25)')}
+            onMouseEnter={e => (e.currentTarget.style.color = '#546357')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#BDB5A0')}
           >
             RESET
           </button>
@@ -270,11 +270,11 @@ export function Demo() {
             style={{
               display: 'flex', alignItems: 'center', gap: '5px',
               fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '12px',
-              color: 'rgba(232,225,207,0.55)', textDecoration: 'none',
+              color: '#7A7060', textDecoration: 'none',
               transition: 'color 200ms',
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.85)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.55)')}
+            onMouseEnter={e => (e.currentTarget.style.color = '#191E1A')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#7A7060')}
           >
             <ArrowLeft size={13} aria-hidden="true" /> Back to site
           </a>

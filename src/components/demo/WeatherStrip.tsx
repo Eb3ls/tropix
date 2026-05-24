@@ -16,7 +16,7 @@ export function WeatherStrip() {
         fontSize: '10px',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
-        color: 'rgba(232,225,207,0.35)',
+        color: '#7A7060',
         marginBottom: '8px',
       }}>
         Weather · Ragusa, SIC
@@ -31,22 +31,22 @@ export function WeatherStrip() {
               padding: '7px 6px',
               borderRadius: '4px',
               background: day.highlight
-                ? 'rgba(204,84,39,0.12)'
-                : 'rgba(232,225,207,0.04)',
+                ? 'rgba(204,84,39,0.08)'
+                : 'rgba(25,30,26,0.03)',
               border: day.highlight
                 ? '1px solid rgba(204,84,39,0.25)'
-                : '1px solid rgba(232,225,207,0.07)',
+                : '1px solid rgba(189,181,160,0.6)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontSize: '9px',
-                color: 'rgba(232,225,207,0.45)',
+                color: '#7A7060',
               }}>
                 {day.day}
               </span>
-              <span style={{ color: day.highlight ? '#CC5427' : 'rgba(232,225,207,0.45)' }}>
+              <span style={{ color: day.highlight ? '#CC5427' : '#7A7060' }}>
                 {ICONS[day.condition]}
               </span>
             </div>
@@ -55,7 +55,7 @@ export function WeatherStrip() {
               fontSize: '13px',
               fontVariantNumeric: 'tabular-nums',
               fontWeight: 700,
-              color: day.highlight ? '#CC5427' : '#E8E1CF',
+              color: day.highlight ? '#CC5427' : '#191E1A',
               lineHeight: 1,
             }}>
               {day.tempC}°
