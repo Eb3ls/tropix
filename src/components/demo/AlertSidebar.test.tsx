@@ -29,19 +29,30 @@ describe('sidebar width', () => {
 })
 
 
-// ── Alert list ─────────────────────────────────────────────────────────────
+// ── Disease alerts section ─────────────────────────────────────────────────
 describe('alert plant list', () => {
-  test('renders a row for every non-healthy plant', () => {
+  test('shows "Disease alerts · N" header matching only status=alert plants', () => {
     sidebar()
-    const nonHealthy = ALL_PLANTS.filter(p => p.status !== 'healthy')
-    // Each row shows the plant label (A-14, B-10, …)
-    nonHealthy.forEach(p => {
+    const alertCount = ALL_PLANTS.filter(p => p.status === 'alert').length
+    expect(screen.getByText(`Disease alerts · ${alertCount}`)).toBeInTheDocument()
+  })
+
+  test('renders a row for every alert-status plant', () => {
+    sidebar()
+    const alertPlants = ALL_PLANTS.filter(p => p.status === 'alert')
+    alertPlants.forEach(p => {
       const label = p.zone === 'Nord' ? 'A' : p.zone === 'Centro' ? 'B' : 'C'
       const relId = p.gridIndex < 48 ? p.gridIndex + 1
                   : p.gridIndex < 84 ? p.gridIndex - 48 + 1
                   : p.gridIndex - 84 + 1
       expect(screen.getByText(`${label}-${String(relId).padStart(2, '0')}`)).toBeInTheDocument()
     })
+  })
+
+  test('shows "Monitoring · N" section for monitoring-status plants', () => {
+    sidebar()
+    const monitorCount = ALL_PLANTS.filter(p => p.status === 'monitoring').length
+    expect(screen.getByText(`Monitoring · ${monitorCount}`)).toBeInTheDocument()
   })
 
   test('shows OVERDUE badge for overdue non-treated plants', () => {

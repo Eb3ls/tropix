@@ -215,31 +215,33 @@ export function Demo() {
             Az. Agr. Greco · Ragusa, Sicilia · 8.3 ha
           </span>
 
-          {/* KPI chips */}
-          <span style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '11px',
-            color: '#546357',
-            letterSpacing: '0.06em',
-            fontVariantNumeric: 'tabular-nums',
-          }}>
-            {ALL_PLANTS.length} trees
-          </span>
+          {/* KPI chips — tight inner group so · reads as punctuation, not a gap */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <span style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: '11px',
+              color: '#546357',
+              letterSpacing: '0.06em',
+              fontVariantNumeric: 'tabular-nums',
+            }}>
+              {ALL_PLANTS.length} trees
+            </span>
 
-          {alertCount > 0 && (
-            <>
-              <span aria-hidden="true" style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
-              <span style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '11px',
-                color: '#B83A2E',
-                letterSpacing: '0.06em',
-                fontVariantNumeric: 'tabular-nums',
-              }}>
-                {alertCount} {alertCount === 1 ? 'disease alert' : 'disease alerts'}
-              </span>
-            </>
-          )}
+            {alertCount > 0 && (
+              <>
+                <span aria-hidden="true" style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
+                <span style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: '11px',
+                  color: '#B83A2E',
+                  letterSpacing: '0.06em',
+                  fontVariantNumeric: 'tabular-nums',
+                }}>
+                  {alertCount} {alertCount === 1 ? 'disease alert' : 'disease alerts'}
+                </span>
+              </>
+            )}
+          </div>
 
 
           {/* DEMO badge */}

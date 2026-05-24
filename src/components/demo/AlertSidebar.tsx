@@ -16,7 +16,8 @@ export function AlertSidebar({
   plants, interventions, selectedId, highlightedIds, treatedIds,
   onAlertClick, onActionClick,
 }: Props) {
-  const alertPlants    = plants.filter(p => p.status !== 'healthy')
+  const diseasePlants  = plants.filter(p => p.status === 'alert')
+  const monitorPlants  = plants.filter(p => p.status === 'monitoring')
   const pendingActions = interventions.filter(i => !i.done)
 
   return (
@@ -36,7 +37,7 @@ export function AlertSidebar({
         <WeatherStrip />
       </div>
 
-      {/* ── Alert list ── */}
+      {/* ── Disease alerts ── */}
       <div style={{ padding: '12px 0 4px' }}>
         <div style={{
           padding: '0 16px 8px',
@@ -46,10 +47,10 @@ export function AlertSidebar({
           textTransform: 'uppercase',
           color: '#CC5427',
         }}>
-          Alerts · {alertPlants.length}
+          Disease alerts · {diseasePlants.length}
         </div>
 
-        {alertPlants.map(plant => {
+        {diseasePlants.map(plant => {
           const isSelected = plant.gridIndex === selectedId
           const isTreated  = treatedIds.has(plant.gridIndex)
           const daysEarly  = plant.disease?.daysBeforeSymptoms
@@ -72,7 +73,6 @@ export function AlertSidebar({
               onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(25,30,26,0.04)' }}
               onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}
             >
-              {/* Tree label + overdue */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
                 <span style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -88,7 +88,7 @@ export function AlertSidebar({
                     fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: '10px',
                     fontVariantNumeric: 'tabular-nums',
-                    color: plant.status === 'alert' ? '#B83A2E' : '#CC5427',
+                    color: '#B83A2E',
                     fontWeight: 600,
                   }}>
                     {plant.disease.probability}%
@@ -106,7 +106,6 @@ export function AlertSidebar({
                     TREATED
                   </span>
                 )}
-                {/* Overdue: uses live interventions prop so it reflects done state */}
                 {interventions.some(i => i.plantIds.includes(plant.gridIndex) && i.overdue && !i.done) && !isTreated && (
                   <span style={{
                     fontFamily: "'IBM Plex Mono', monospace",
@@ -121,7 +120,6 @@ export function AlertSidebar({
                 )}
               </div>
 
-              {/* Disease name */}
               {plant.disease && (
                 <div style={{
                   fontFamily: "'DM Serif Display', serif",
@@ -137,7 +135,6 @@ export function AlertSidebar({
                 </div>
               )}
 
-              {/* "Xd early" — always shown for disease alerts */}
               {daysEarly && !isTreated && (
                 <div style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -151,6 +148,95 @@ export function AlertSidebar({
           )
         })}
       </div>
+
+      {/* ── Monitoring ── */}
+      {monitorPlants.length > 0 && (
+        <div style={{ padding: '4px 0 4px', borderTop: '1px solid #BDB5A0' }}>
+          <div style={{
+            padding: '8px 16px 6px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '10px',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: '#7A7060',
+          }}>
+            Monitoring · {monitorPlants.length}
+          </div>
+
+          {monitorPlants.map(plant => {
+            const isSelected = plant.gridIndex === selectedId
+            const isTreated  = treatedIds.has(plant.gridIndex)
+
+            return (
+              <button
+                key={plant.id}
+                onClick={() => onAlertClick(plant)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '6px 16px',
+                  background: isSelected ? 'rgba(25,30,26,0.06)' : 'transparent',
+                  border: 'none',
+                  borderLeft: `2px solid ${STATUS_COLOR[plant.status]}`,
+                  cursor: 'pointer',
+                  transition: 'background 150ms',
+                }}
+                onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(25,30,26,0.04)' }}
+                onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: '#191E1A',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    {plantLabel(plant)}
+                  </span>
+                  {isTreated && (
+                    <span style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: '9px',
+                      color: '#B8860B',
+                      border: '1px solid rgba(184,134,11,0.35)',
+                      borderRadius: '3px',
+                      padding: '1px 4px',
+                    }}>
+                      TREATED
+                    </span>
+                  )}
+                  {plant.irrigation && !isTreated && (
+                    <span style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: '10px',
+                      color: plant.irrigation.sapFlowPct < 60 ? '#B83A2E' : '#CC5427',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      {plant.irrigation.sapFlowPct}%
+                    </span>
+                  )}
+                </div>
+                {plant.disease && (
+                  <div style={{
+                    fontFamily: "'DM Serif Display', serif",
+                    fontStyle: 'italic',
+                    fontSize: '11px',
+                    color: '#7A7060',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    marginTop: '1px',
+                  }}>
+                    {plant.disease.name}
+                  </div>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {/* ── Action list ── */}
       <div style={{ padding: '12px 0 16px', borderTop: '1px solid #BDB5A0' }}>
