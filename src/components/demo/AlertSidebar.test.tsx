@@ -49,10 +49,10 @@ describe('alert plant list', () => {
     })
   })
 
-  test('shows "Sensor alerts · N" section for monitoring-status plants', () => {
+  test('shows "Field alerts · N" section for monitoring-status plants', () => {
     sidebar()
     const monitorCount = ALL_PLANTS.filter(p => p.status === 'monitoring').length
-    expect(screen.getByText(`Sensor alerts · ${monitorCount}`)).toBeInTheDocument()
+    expect(screen.getByText(`Field alerts · ${monitorCount}`)).toBeInTheDocument()
   })
 
   test('shows OVERDUE badge for overdue non-treated plants', () => {

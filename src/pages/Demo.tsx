@@ -134,8 +134,8 @@ export function Demo() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <a
-              href="#pilot"
-              onClick={e => { e.preventDefault(); window.location.hash = 'pilot'; window.dispatchEvent(new HashChangeEvent('hashchange')) }}
+              href="#apply"
+              onClick={e => { e.preventDefault(); window.location.hash = '#apply'; window.dispatchEvent(new HashChangeEvent('hashchange')) }}
               style={{
                 display: 'block',
                 padding: '11px 20px',
@@ -148,7 +148,7 @@ export function Demo() {
                 transition: 'background 150ms',
               }}
             >
-              Request pilot access →
+              Apply for pilot
             </a>
             <a
               href="#"

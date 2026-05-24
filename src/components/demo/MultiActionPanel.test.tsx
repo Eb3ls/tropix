@@ -68,8 +68,8 @@ describe('affected trees list', () => {
 
   test('each affected plant label is visible', () => {
     panel()
-    // i5 covers A-06, A-43, B-05, C-05, C-32
-    ;['A-06', 'A-43', 'B-05', 'C-05', 'C-32'].forEach(label => {
+    // i5 covers A-06, A-43, C-05
+    ;['A-06', 'A-43', 'C-05'].forEach(label => {
       expect(screen.getByText(label)).toBeInTheDocument()
     })
   })

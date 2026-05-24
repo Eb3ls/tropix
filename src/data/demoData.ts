@@ -65,11 +65,11 @@ export const STATUS_COLOR: Record<PlantStatus, string> = {
   alert:      '#B83A2E',
 }
 
-export const PRIORITY_STYLE: Record<Priority, { bg: string; border: string; text: string; label: string }> = {
-  urgent: { bg: 'rgba(184,58,46,0.07)',  border: 'rgba(184,58,46,0.28)',  text: '#B83A2E', label: 'URGENT' },
-  high:   { bg: 'rgba(184,58,46,0.04)',  border: 'rgba(184,58,46,0.16)',  text: '#CC5427', label: 'HIGH'   },
-  medium: { bg: 'rgba(204,84,39,0.05)',  border: 'rgba(204,84,39,0.22)',  text: '#CC5427', label: 'MEDIUM' },
-  low:    { bg: 'rgba(189,181,160,0.18)', border: 'rgba(189,181,160,0.45)', text: '#7A7060', label: 'LOW'  },
+export const PRIORITY_STYLE: Record<Priority, { bg: string; border: string; text: string; label: string; abbr: string }> = {
+  urgent: { bg: 'rgba(184,58,46,0.07)',  border: 'rgba(184,58,46,0.28)',  text: '#B83A2E', label: 'URGENT', abbr: 'URG'  },
+  high:   { bg: 'rgba(184,58,46,0.04)',  border: 'rgba(184,58,46,0.16)',  text: '#CC5427', label: 'HIGH',   abbr: 'HIGH' },
+  medium: { bg: 'rgba(204,84,39,0.05)',  border: 'rgba(204,84,39,0.22)',  text: '#CC5427', label: 'MEDIUM', abbr: 'MED'  },
+  low:    { bg: 'rgba(189,181,160,0.18)', border: 'rgba(189,181,160,0.45)', text: '#7A7060', label: 'LOW',   abbr: 'LOW'  },
 }
 
 // ─── Cultivar table ───────────────────────────────────────────────────────────
@@ -335,7 +335,7 @@ export interface WeatherDay {
 export const DEMO_WEATHER: WeatherDay[] = [
   { day: 'Today',    tempC: 28, condition: 'partly-cloudy', note: '',                        highlight: false },
   { day: 'Tomorrow', tempC: 34, condition: 'sunny',         note: 'Heat · irrigate morning', highlight: true  },
-  { day: 'Sun 26',   tempC: 31, condition: 'partly-cloudy', note: '',                        highlight: false },
+  { day: 'Tue 26',   tempC: 31, condition: 'partly-cloudy', note: '',                        highlight: false },
 ]
 
 // ─── Interventions ────────────────────────────────────────────────────────────
@@ -374,27 +374,27 @@ export const INITIAL_INTERVENTIONS: Intervention[] = [
   },
   {
     id: 'i5', priority: 'medium', type: 'irrigation',
-    plantLabels: 'A-06, A-43, B-05, C-05, C-32', plantCount: 5,
+    plantLabels: 'A-06, A-43, C-05', plantCount: 3,
     title: 'Scheduled irrigation',
     detail: 'Water stress detected · 25–40 min per tree · morning window',
     scheduledFor: 'tomorrow 08:00', done: false, overdue: false,
-    plantIds: [5, 42, 52, 88, 115],
+    plantIds: [5, 42, 88],
   },
   {
     id: 'i6', priority: 'medium', type: 'irrigation',
-    plantLabels: 'C-32', plantCount: 1,
+    plantLabels: 'B-05, C-32', plantCount: 2,
     title: 'Urgent irrigation',
-    detail: 'Sap-flow at 59% of baseline · irrigate this evening',
-    scheduledFor: 'today 19:00', done: false, overdue: false,
-    plantIds: [115],
+    detail: 'Water stress detected in both trees · irrigate this evening',
+    scheduledFor: 'today evening', done: false, overdue: false,
+    plantIds: [52, 115],
   },
   {
     id: 'i7', priority: 'low', type: 'fertilizer',
-    plantLabels: 'Zone North — 12 trees', plantCount: 12,
-    title: 'Nitrogen fertilisation (N)',
+    plantLabels: 'North zone · 11 trees', plantCount: 11,
+    title: 'Nitrogen fertilisation',
     detail: 'Ammonium nitrate 27% · dose 8 g/m² · deficiency confirmed by NDVI',
     scheduledFor: '28 May', done: false, overdue: false,
-    plantIds: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    plantIds: [12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
   },
   {
     id: 'i8', priority: 'low', type: 'fertilizer',

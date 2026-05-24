@@ -133,7 +133,6 @@ export function Hero() {
               maxWidth: '520px', marginBottom: '40px',
             }}
           >
-            The first precision-farming platform built for Mediterranean avocado and mango.
             Pathogen detection before visible symptoms, water-stress monitoring, and yield
             forecasting — at per-tree resolution.
           </p>
@@ -155,7 +154,7 @@ export function Hero() {
               onMouseEnter={e => (e.currentTarget.style.background = '#A8421C')}
               onMouseLeave={e => (e.currentTarget.style.background = '#CC5427')}
             >
-              Apply for 2026 Sicily pilot <ArrowDown size={15} />
+              Apply for pilot <ArrowDown size={15} />
             </a>
 
             {/* Secondary */}

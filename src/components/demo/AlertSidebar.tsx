@@ -160,7 +160,7 @@ export function AlertSidebar({
             textTransform: 'uppercase',
             color: '#7A7060',
           }}>
-            Sensor alerts · {monitorPlants.length}
+            Field alerts · {monitorPlants.length}
           </div>
 
           {monitorPlants.map(plant => {
@@ -288,7 +288,7 @@ export function AlertSidebar({
                 border: `1px solid ${ps.border}`,
                 color: ps.text,
               }}>
-                {ps.label.slice(0, 3)}
+                {ps.abbr}
               </span>
 
               <div style={{ flex: 1, minWidth: 0 }}>
