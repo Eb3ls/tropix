@@ -67,7 +67,7 @@ export function TreeCircles({ plants, selectedId, highlightedIds, treatedIds, zo
             role="button"
             tabIndex={0}
             aria-label={tooltip}
-            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onTreeClick(plant) }}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTreeClick(plant) } }}
             style={{ cursor: 'pointer' }}
           >
             <title>{tooltip}</title>
