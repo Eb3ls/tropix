@@ -10,8 +10,8 @@ const ZOOM_STEP = 0.25
 
 const ZONES: Array<{ zone: Zone; cy: string }> = [
   { zone: 'Nord',   cy: '2%'  },
-  { zone: 'Centro', cy: '43%' },
-  { zone: 'Sud',    cy: '69%' },
+  { zone: 'Centro', cy: '38%' },
+  { zone: 'Sud',    cy: '65%' },
 ]
 
 interface Props {
@@ -188,12 +188,13 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           willChange: 'transform',
         }}
       >
-        {/* Aerial photo — loaded from public/ as a URL string */}
+        {/* Aerial photo — objectFit intentionally omitted (defaults to fill).
+            fill keeps the full image visible so SVG % coords align 1:1. */}
         <img
           src="/orchard-aerial.png"
           alt="Aerial view of Az. Agr. Greco orchard"
           draggable={false}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          style={{ width: '100%', height: '100%', display: 'block' }}
         />
 
         {/* SVG circle overlay */}

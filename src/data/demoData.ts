@@ -79,47 +79,50 @@ export const CULTIVARS: Record<Zone, string> = {
   Sud:    'Mangifera indica — Tommy Atkins',
 }
 
-// ─── Tree coordinates (percentage-based on aerial image) ─────────────────────
+// ─── Tree coordinates (percentage-based on aerial image 1024×650) ────────────
+//
+// Layout: quincunx (staggered rows) matching the aerial photo.
+// Image is rendered with objectFit:fill so SVG % = image % directly.
+//
+// Column spacing: 7.7 % → 12 cols span ~88 %
+//   even rows: col 0 at 3.8 % → col 11 at 88.5 %
+//   odd rows:  col 0 at 7.65 % (+ half-step 3.85) → col 11 at 92.35 %
+//
+// Row positions (absolute % of image height):
+//   Zone Nord   (rows 0–3, idx 0–47):   5, 14, 23, 32 %
+//   Zone Centro (rows 4–6, idx 48–83):  43, 52, 61 %
+//   Zone Sud    (rows 7–9, idx 84–119): 70, 79, 88 %
+//
+// Jitter: ±0.35 % (tight natural variation, does not displace from tree centre)
 function generateTreeCoords(): Array<{ cx: number; cy: number }> {
   const coords: Array<{ cx: number; cy: number }> = []
-  const colX = (col: number) => 4.2 + col * 8.33
 
-  // Zone North: indices 0–47, 4 rows × 12 cols, cy 6%–36%
-  for (let i = 0; i < 48; i++) {
-    const row = Math.floor(i / 12)
-    const col = i % 12
-    const jx = ((i * 7 + 3) % 17 - 8) * 0.18
-    const jy = ((i * 11 + 5) % 13 - 6) * 0.22
-    coords.push({
-      cx: Math.round((colX(col) + jx) * 10) / 10,
-      cy: Math.round((6 + row * 10 + jy) * 10) / 10,
-    })
-  }
+  const COL_START  = 3.8
+  const COL_STEP   = 7.7
+  const COL_STAGGER = COL_STEP / 2   // 3.85 — offset for odd absolute rows
 
-  // Zone Central: indices 48–83, 3 rows × 12 cols, cy 46%–62%
-  for (let i = 0; i < 36; i++) {
-    const idx = 48 + i
-    const row = Math.floor(i / 12)
-    const col = i % 12
-    const jx = ((idx * 7 + 3) % 17 - 8) * 0.18
-    const jy = ((idx * 11 + 5) % 13 - 6) * 0.22
-    coords.push({
-      cx: Math.round((colX(col) + jx) * 10) / 10,
-      cy: Math.round((46 + row * 8 + jy) * 10) / 10,
-    })
-  }
+  const ZONE_ROWS = [
+    { rowCy: [5, 14, 23, 32], startIdx: 0,  absRowBase: 0 },
+    { rowCy: [43, 52, 61],    startIdx: 48, absRowBase: 4 },
+    { rowCy: [70, 79, 88],    startIdx: 84, absRowBase: 7 },
+  ]
 
-  // Zone South: indices 84–119, 3 rows × 12 cols, cy 72%–88%
-  for (let i = 0; i < 36; i++) {
-    const idx = 84 + i
-    const row = Math.floor(i / 12)
-    const col = i % 12
-    const jx = ((idx * 7 + 3) % 17 - 8) * 0.18
-    const jy = ((idx * 11 + 5) % 13 - 6) * 0.22
-    coords.push({
-      cx: Math.round((colX(col) + jx) * 10) / 10,
-      cy: Math.round((72 + row * 8 + jy) * 10) / 10,
-    })
+  for (const { rowCy, startIdx, absRowBase } of ZONE_ROWS) {
+    for (let row = 0; row < rowCy.length; row++) {
+      const absRow  = absRowBase + row
+      const xOffset = absRow % 2 === 1 ? COL_STAGGER : 0
+
+      for (let col = 0; col < 12; col++) {
+        const flatIdx = startIdx + row * 12 + col
+        // Deterministic micro-jitter — different per tree, stays within ±0.35 %
+        const jx = ((flatIdx * 7  + 3) % 7 - 3) * 0.117
+        const jy = ((flatIdx * 11 + 5) % 7 - 3) * 0.117
+        coords.push({
+          cx: Math.round((COL_START + xOffset + col * COL_STEP + jx) * 10) / 10,
+          cy: Math.round((rowCy[row] + jy) * 10) / 10,
+        })
+      }
+    }
   }
 
   return coords
