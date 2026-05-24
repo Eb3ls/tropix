@@ -28,20 +28,6 @@ describe('sidebar width', () => {
   })
 })
 
-// ── Health chip ────────────────────────────────────────────────────────────
-describe('farm health chip', () => {
-  test('shows correct healthy count', () => {
-    sidebar()
-    const healthy = ALL_PLANTS.filter(p => p.status === 'healthy').length
-    expect(screen.getByText(`${healthy} healthy`)).toBeInTheDocument()
-  })
-
-  test('shows correct alert count', () => {
-    sidebar()
-    const alerts = ALL_PLANTS.filter(p => p.status === 'alert').length
-    expect(screen.getByText(`${alerts} alerts`)).toBeInTheDocument()
-  })
-})
 
 // ── Alert list ─────────────────────────────────────────────────────────────
 describe('alert plant list', () => {

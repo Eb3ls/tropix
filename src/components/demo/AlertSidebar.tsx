@@ -17,8 +17,6 @@ export function AlertSidebar({
   onAlertClick, onActionClick,
 }: Props) {
   const alertPlants    = plants.filter(p => p.status !== 'healthy')
-  const healthyCount   = plants.filter(p => p.status === 'healthy').length
-  const alertCount     = alertPlants.filter(p => p.status === 'alert').length
   const pendingActions = interventions.filter(i => !i.done)
 
   return (
@@ -32,29 +30,6 @@ export function AlertSidebar({
       overflowY: 'auto',
       overflowX: 'hidden',
     }}>
-
-      {/* ── Farm health chip ── */}
-      <div style={{
-        padding: '14px 16px 10px',
-        borderBottom: '1px solid #BDB5A0',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-      }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3A7A4E', display: 'inline-block' }} />
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: '#7A7060', fontVariantNumeric: 'tabular-nums' }}>
-            {healthyCount} healthy
-          </span>
-        </span>
-        <span style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#B83A2E', display: 'inline-block' }} />
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: '#7A7060', fontVariantNumeric: 'tabular-nums' }}>
-            {alertCount} alerts
-          </span>
-        </span>
-      </div>
 
       {/* ── Weather strip ── */}
       <div style={{ borderBottom: '1px solid #BDB5A0' }}>

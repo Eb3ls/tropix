@@ -217,20 +217,45 @@ export function Demo() {
           </span>
 
           {/* KPI chips */}
-          {[
-            { label: '120 trees',            color: undefined            },
-            { label: `${alertCount} alerts`,  color: alertCount > 0  ? '#B83A2E' : undefined },
-            { label: `${urgentCount} urgent`, color: urgentCount > 0 ? '#CC5427' : undefined },
-          ].map(chip => (
-            <span key={chip.label} style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '10px',
-              color: chip.color ?? '#BDB5A0',
-              letterSpacing: '0.06em',
-            }}>
-              {chip.label}
-            </span>
-          ))}
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '11px',
+            color: '#546357',
+            letterSpacing: '0.06em',
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            {ALL_PLANTS.length} trees
+          </span>
+
+          {alertCount > 0 && (
+            <>
+              <span aria-hidden="true" style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
+              <span style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '11px',
+                color: '#B83A2E',
+                letterSpacing: '0.06em',
+                fontVariantNumeric: 'tabular-nums',
+              }}>
+                {alertCount} {alertCount === 1 ? 'disease alert' : 'disease alerts'}
+              </span>
+            </>
+          )}
+
+          {urgentCount > 0 && (
+            <>
+              <span aria-hidden="true" style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
+              <span style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '11px',
+                color: '#CC5427',
+                letterSpacing: '0.06em',
+                fontVariantNumeric: 'tabular-nums',
+              }}>
+                {urgentCount} {urgentCount === 1 ? 'urgent action' : 'urgent actions'}
+              </span>
+            </>
+          )}
 
           {/* DEMO badge */}
           <span style={{
