@@ -38,8 +38,7 @@ export function Demo() {
     return new Set()
   }, [rightPanel])
 
-  const alertCount  = ALL_PLANTS.filter(p => p.status === 'alert').length
-  const urgentCount = interventions.filter(i => (i.priority === 'urgent' || i.priority === 'high') && !i.done).length
+  const alertCount = ALL_PLANTS.filter(p => p.status === 'alert').length
 
   // ── Handlers ─────────────────────────────────────────────────────────────
   const handleTreeClick = useCallback((plant: Plant) => {
@@ -242,20 +241,6 @@ export function Demo() {
             </>
           )}
 
-          {urgentCount > 0 && (
-            <>
-              <span aria-hidden="true" style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
-              <span style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '11px',
-                color: '#CC5427',
-                letterSpacing: '0.06em',
-                fontVariantNumeric: 'tabular-nums',
-              }}>
-                {urgentCount} {urgentCount === 1 ? 'urgent action' : 'urgent actions'}
-              </span>
-            </>
-          )}
 
           {/* DEMO badge */}
           <span style={{
