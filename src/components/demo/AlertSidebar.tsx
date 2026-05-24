@@ -23,7 +23,7 @@ export function AlertSidebar({
 
   return (
     <div style={{
-      width: '220px',
+      width: '280px',
       flexShrink: 0,
       background: '#F0EADB',
       borderRight: '1px solid #BDB5A0',

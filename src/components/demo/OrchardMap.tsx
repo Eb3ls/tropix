@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { TreeCircles } from './TreeCircles'
 import { ZoomControls } from './ZoomControls'
+import { computeWheelZoom } from './orchardMapMath'
 import { type Plant, CULTIVARS, ZONE_LABEL, type Zone } from '../../data/demoData'
 
 const MIN_ZOOM = 0.8
@@ -21,79 +22,73 @@ interface Props {
   onTreeClick: (plant: Plant) => void
 }
 
+/** Combined scale + translate — updated atomically to avoid React anti-patterns. */
+type Transform = { scale: number; x: number; y: number }
+
 export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onTreeClick }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [scale, setScale]         = useState(1)
-  const [translate, setTranslate] = useState({ x: 0, y: 0 })
-  // Mirror translate in a ref so wheel handler never reads a stale closure value
-  const translateRef = useRef({ x: 0, y: 0 })
-  useEffect(() => { translateRef.current = translate }, [translate])
+  const [tf, setTf]  = useState<Transform>({ scale: 1, x: 0, y: 0 })
+  const dragRef      = useRef<{ startX: number; startY: number; tx: number; ty: number } | null>(null)
 
-  const dragRef = useRef<{ startX: number; startY: number; tx: number; ty: number } | null>(null)
-
-  // ── Clamp translate so the image doesn't pan completely off screen ──────────
-  const clampTranslate = useCallback((tx: number, ty: number, s: number) => {
+  // ── Clamp translate so the image stays mostly on-screen ──────────────────
+  const clamp = useCallback((tx: number, ty: number, s: number): { x: number; y: number } => {
     const c = containerRef.current
     if (!c) return { x: tx, y: ty }
     const { width: cw, height: ch } = c.getBoundingClientRect()
     const maxX = cw * 0.8
-    const minX = cw * (1 - s * 0.8)
+    const minX = cw * (0.2 - s)      // right edge must stay ≥ 20% into container
     const maxY = ch * 0.8
-    const minY = ch * (1 - s * 0.8)
+    const minY = ch * (0.2 - s)
     return {
       x: Math.min(maxX, Math.max(minX, tx)),
       y: Math.min(maxY, Math.max(minY, ty)),
     }
   }, [])
 
-  // ── Non-passive wheel listener (required for e.preventDefault() to work) ───
+  // ── Non-passive wheel listener (required for e.preventDefault()) ──────────
+  // setTf updater is pure — no side effects, both scale+translate updated atomically.
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
     const onWheel = (e: WheelEvent) => {
       e.preventDefault()
-      const rect   = el.getBoundingClientRect()
-      const mouseX = e.clientX - rect.left
-      const mouseY = e.clientY - rect.top
-
-      setScale(prevScale => {
-        const factor   = e.deltaY < 0 ? 1.12 : 1 / 1.12
-        const newScale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevScale * factor))
-        const { x: tx, y: ty } = translateRef.current
-        const contentX = (mouseX - tx) / prevScale
-        const contentY = (mouseY - ty) / prevScale
-        const newTx    = mouseX - contentX * newScale
-        const newTy    = mouseY - contentY * newScale
-        const clamped  = clampTranslate(newTx, newTy, newScale)
-        setTranslate(clamped)
-        return newScale
+      const rect = el.getBoundingClientRect()
+      setTf(prev => {
+        const r = computeWheelZoom({
+          prevScale:       prev.scale,
+          deltaY:          e.deltaY,
+          mouseX:          e.clientX - rect.left,
+          mouseY:          e.clientY - rect.top,
+          translateX:      prev.x,
+          translateY:      prev.y,
+          containerWidth:  rect.width,
+          containerHeight: rect.height,
+          minZoom: MIN_ZOOM,
+          maxZoom: MAX_ZOOM,
+        })
+        return { scale: r.scale, x: r.translateX, y: r.translateY }
       })
     }
     el.addEventListener('wheel', onWheel as EventListener, { passive: false } as AddEventListenerOptions)
-    return () => el.removeEventListener('wheel', onWheel as EventListener, { passive: false } as AddEventListenerOptions)
-  }, [clampTranslate])
+    return () => el.removeEventListener('wheel', onWheel as EventListener)
+  }, [])
 
-  // ── Drag to pan (only when zoomed in) ──────────────────────────────────────
+  // ── Drag to pan (only when zoomed in) ─────────────────────────────────────
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (scale <= 1) return
-    dragRef.current = { startX: e.clientX, startY: e.clientY, tx: translate.x, ty: translate.y }
-  }, [scale, translate])
-
-  // Ref for current scale — used in drag handler to avoid churn of re-registration
-  const scaleRef = useRef(scale)
-  useEffect(() => { scaleRef.current = scale }, [scale])
+    if (tf.scale <= 1) return
+    dragRef.current = { startX: e.clientX, startY: e.clientY, tx: tf.x, ty: tf.y }
+  }, [tf])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!dragRef.current) return
-      const dx = e.clientX - dragRef.current.startX
-      const dy = e.clientY - dragRef.current.startY
-      const clamped = clampTranslate(
-        dragRef.current.tx + dx,
-        dragRef.current.ty + dy,
-        scaleRef.current,
-      )
-      setTranslate(clamped)
+      const drag = dragRef.current
+      if (!drag) return
+      const dx = e.clientX - drag.startX
+      const dy = e.clientY - drag.startY
+      setTf(prev => {
+        const clamped = clamp(drag.tx + dx, drag.ty + dy, prev.scale)
+        return { ...prev, x: clamped.x, y: clamped.y }
+      })
     }
     const handleMouseUp = () => { dragRef.current = null }
     window.addEventListener('mousemove', handleMouseMove)
@@ -102,56 +97,60 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup',   handleMouseUp)
     }
-  }, [clampTranslate])
+  }, [clamp])
 
-  // ── Double-click: zoom to 2× at click point, or reset if already at max ───
+  // ── Double-click: zoom to 2× at cursor, or reset if near max ─────────────
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     const c = containerRef.current
     if (!c) return
-    if (scale >= MAX_ZOOM * 0.9) {
-      setScale(1)
-      setTranslate({ x: 0, y: 0 })
+    if (tf.scale >= MAX_ZOOM * 0.9) {
+      setTf({ scale: 1, x: 0, y: 0 })
       return
     }
-    const rect   = c.getBoundingClientRect()
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-    const newScale = Math.min(MAX_ZOOM, scale * 2)
-    const contentX = (mouseX - translate.x) / scale
-    const contentY = (mouseY - translate.y) / scale
+    const rect     = c.getBoundingClientRect()
+    const mouseX   = e.clientX - rect.left
+    const mouseY   = e.clientY - rect.top
+    const newScale = Math.min(MAX_ZOOM, tf.scale * 2)
+    const contentX = (mouseX - tf.x) / tf.scale
+    const contentY = (mouseY - tf.y) / tf.scale
     const newTx    = mouseX - contentX * newScale
     const newTy    = mouseY - contentY * newScale
-    setScale(newScale)
-    setTranslate(clampTranslate(newTx, newTy, newScale))
-  }, [scale, translate, clampTranslate])
+    const clamped  = clamp(newTx, newTy, newScale)
+    setTf({ scale: newScale, x: clamped.x, y: clamped.y })
+  }, [tf, clamp])
 
-  // ── Button controls ────────────────────────────────────────────────────────
+  // ── Button zoom controls ───────────────────────────────────────────────────
   const zoomIn = useCallback(() => {
     const c = containerRef.current
     if (!c) return
     const { width: cw, height: ch } = c.getBoundingClientRect()
-    const newScale = Math.min(MAX_ZOOM, scale + ZOOM_STEP)
-    const newTx    = cw / 2 - (cw / 2 - translate.x) * (newScale / scale)
-    const newTy    = ch / 2 - (ch / 2 - translate.y) * (newScale / scale)
-    setScale(newScale)
-    setTranslate(clampTranslate(newTx, newTy, newScale))
-  }, [scale, translate, clampTranslate])
+    setTf(prev => {
+      const newScale = Math.min(MAX_ZOOM, prev.scale + ZOOM_STEP)
+      const clamped  = clamp(
+        cw / 2 - (cw / 2 - prev.x) * (newScale / prev.scale),
+        ch / 2 - (ch / 2 - prev.y) * (newScale / prev.scale),
+        newScale,
+      )
+      return { scale: newScale, x: clamped.x, y: clamped.y }
+    })
+  }, [clamp])
 
   const zoomOut = useCallback(() => {
     const c = containerRef.current
     if (!c) return
     const { width: cw, height: ch } = c.getBoundingClientRect()
-    const newScale = Math.max(MIN_ZOOM, scale - ZOOM_STEP)
-    const newTx    = cw / 2 - (cw / 2 - translate.x) * (newScale / scale)
-    const newTy    = ch / 2 - (ch / 2 - translate.y) * (newScale / scale)
-    setScale(newScale)
-    setTranslate(clampTranslate(newTx, newTy, newScale))
-  }, [scale, translate, clampTranslate])
+    setTf(prev => {
+      const newScale = Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP)
+      const clamped  = clamp(
+        cw / 2 - (cw / 2 - prev.x) * (newScale / prev.scale),
+        ch / 2 - (ch / 2 - prev.y) * (newScale / prev.scale),
+        newScale,
+      )
+      return { scale: newScale, x: clamped.x, y: clamped.y }
+    })
+  }, [clamp])
 
-  const resetZoom = useCallback(() => {
-    setScale(1)
-    setTranslate({ x: 0, y: 0 })
-  }, [])
+  const resetZoom = useCallback(() => setTf({ scale: 1, x: 0, y: 0 }), [])
 
   return (
     <div
@@ -163,7 +162,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
         position: 'relative',
         overflow: 'hidden',
         background: '#191E1A',
-        cursor: scale > 1 ? 'grab' : 'default',
+        cursor: tf.scale > 1 ? 'grab' : 'default',
         userSelect: 'none',
       }}
     >
@@ -173,7 +172,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           position: 'absolute',
           inset: 0,
           transformOrigin: '0 0',
-          transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
+          transform: `translate(${tf.x}px, ${tf.y}px) scale(${tf.scale})`,
           willChange: 'transform',
         }}
       >
@@ -182,12 +181,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           src="/orchard-aerial.png"
           alt="Aerial view of Az. Agr. Greco orchard"
           draggable={false}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-          }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
         {/* SVG circle overlay */}
@@ -196,7 +190,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           selectedId={selectedId}
           highlightedIds={highlightedIds}
           treatedIds={treatedIds}
-          zoom={scale}
+          zoom={tf.scale}
           onTreeClick={onTreeClick}
         />
 
@@ -210,7 +204,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
               top: cy,
               left: '12px',
               fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: `${11 / scale}px`,
+              fontSize: `${11 / tf.scale}px`,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               color: 'rgba(232,225,207,0.5)',
@@ -232,7 +226,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
             bottom: '10px',
             left: '12px',
             fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: `${9 / scale}px`,
+            fontSize: `${9 / tf.scale}px`,
             color: 'rgba(232,225,207,0.35)',
             pointerEvents: 'none',
           }}
@@ -241,9 +235,9 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
         </div>
       </div>
 
-      {/* Zoom controls (outside transform — stay at fixed screen position) */}
+      {/* Zoom controls — outside transform, stays at fixed screen position */}
       <ZoomControls
-        zoom={scale}
+        zoom={tf.scale}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         onZoomIn={zoomIn}
