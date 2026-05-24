@@ -22,9 +22,13 @@ interface Props {
 }
 
 export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onTreeClick }: Props) {
-  const containerRef  = useRef<HTMLDivElement>(null)
-  const [scale, setScale]           = useState(1)
-  const [translate, setTranslate]   = useState({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale]         = useState(1)
+  const [translate, setTranslate] = useState({ x: 0, y: 0 })
+  // Mirror translate in a ref so wheel handler never reads a stale closure value
+  const translateRef = useRef({ x: 0, y: 0 })
+  useEffect(() => { translateRef.current = translate }, [translate])
+
   const dragRef = useRef<{ startX: number; startY: number; tx: number; ty: number } | null>(null)
 
   // ── Clamp translate so the image doesn't pan completely off screen ──────────
@@ -42,27 +46,32 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
     }
   }, [])
 
-  // ── Wheel zoom (centered on cursor) ────────────────────────────────────────
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault()
-    const c = containerRef.current
-    if (!c) return
-    const rect = c.getBoundingClientRect()
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
+  // ── Non-passive wheel listener (required for e.preventDefault() to work) ───
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const rect   = el.getBoundingClientRect()
+      const mouseX = e.clientX - rect.left
+      const mouseY = e.clientY - rect.top
 
-    setScale(prevScale => {
-      const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12
-      const newScale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevScale * factor))
-      const contentX = (mouseX - translate.x) / prevScale
-      const contentY = (mouseY - translate.y) / prevScale
-      const newTx    = mouseX - contentX * newScale
-      const newTy    = mouseY - contentY * newScale
-      const clamped  = clampTranslate(newTx, newTy, newScale)
-      setTranslate(clamped)
-      return newScale
-    })
-  }, [translate, clampTranslate])
+      setScale(prevScale => {
+        const factor   = e.deltaY < 0 ? 1.12 : 1 / 1.12
+        const newScale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevScale * factor))
+        const { x: tx, y: ty } = translateRef.current
+        const contentX = (mouseX - tx) / prevScale
+        const contentY = (mouseY - ty) / prevScale
+        const newTx    = mouseX - contentX * newScale
+        const newTy    = mouseY - contentY * newScale
+        const clamped  = clampTranslate(newTx, newTy, newScale)
+        setTranslate(clamped)
+        return newScale
+      })
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel, { passive: false })
+  }, [clampTranslate])
 
   // ── Drag to pan (only when zoomed in) ──────────────────────────────────────
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -70,12 +79,20 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
     dragRef.current = { startX: e.clientX, startY: e.clientY, tx: translate.x, ty: translate.y }
   }, [scale, translate])
 
+  // Ref for current scale — used in drag handler to avoid churn of re-registration
+  const scaleRef = useRef(scale)
+  useEffect(() => { scaleRef.current = scale }, [scale])
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!dragRef.current) return
       const dx = e.clientX - dragRef.current.startX
       const dy = e.clientY - dragRef.current.startY
-      const clamped = clampTranslate(dragRef.current.tx + dx, dragRef.current.ty + dy, scale)
+      const clamped = clampTranslate(
+        dragRef.current.tx + dx,
+        dragRef.current.ty + dy,
+        scaleRef.current,
+      )
       setTranslate(clamped)
     }
     const handleMouseUp = () => { dragRef.current = null }
@@ -85,7 +102,7 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup',   handleMouseUp)
     }
-  }, [scale, clampTranslate])
+  }, [clampTranslate])
 
   // ── Double-click: zoom to 2× at click point, or reset if already at max ───
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
@@ -139,7 +156,6 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
   return (
     <div
       ref={containerRef}
-      onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
       style={{
