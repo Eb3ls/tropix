@@ -4,6 +4,7 @@ export type Zone            = 'Nord' | 'Centro' | 'Sud'
 export type Tab             = 'all' | 'risk' | 'interventions'
 export type Priority        = 'urgent' | 'high' | 'medium' | 'low'
 export type InterventionType = 'disease' | 'irrigation' | 'fertilizer'
+export type AlertState = 'active' | 'treated' | 'resolved'
 
 export interface DiseaseRec {
   name: string
@@ -33,6 +34,8 @@ export interface Plant {
   disease?: DiseaseRec
   irrigation?: IrrigationRec
   fertilizer?: FertilizerRec
+  coords: { cx: number; cy: number }
+  conditionCount: number
 }
 export interface Intervention {
   id: string
@@ -44,6 +47,8 @@ export interface Intervention {
   detail: string
   scheduledFor: string
   done: boolean
+  overdue: boolean
+  plantIds: number[]
 }
 
 // ─── Zone display labels ──────────────────────────────────────────────────────
@@ -72,6 +77,58 @@ export const CULTIVARS: Record<Zone, string> = {
   Nord:   'Persea americana — Hass',
   Centro: 'Persea americana — Fuerte',
   Sud:    'Mangifera indica — Tommy Atkins',
+}
+
+// ─── Tree coordinates (percentage-based on aerial image) ─────────────────────
+function generateTreeCoords(): Array<{ cx: number; cy: number }> {
+  const coords: Array<{ cx: number; cy: number }> = []
+  const colX = (col: number) => 4.2 + col * 8.33
+
+  // Zone North: indices 0–47, 4 rows × 12 cols, cy 6%–36%
+  for (let i = 0; i < 48; i++) {
+    const row = Math.floor(i / 12)
+    const col = i % 12
+    const jx = ((i * 7 + 3) % 17 - 8) * 0.18
+    const jy = ((i * 11 + 5) % 13 - 6) * 0.22
+    coords.push({
+      cx: Math.round((colX(col) + jx) * 10) / 10,
+      cy: Math.round((6 + row * 10 + jy) * 10) / 10,
+    })
+  }
+
+  // Zone Central: indices 48–83, 3 rows × 12 cols, cy 46%–62%
+  for (let i = 0; i < 36; i++) {
+    const idx = 48 + i
+    const row = Math.floor(i / 12)
+    const col = i % 12
+    const jx = ((idx * 7 + 3) % 17 - 8) * 0.18
+    const jy = ((idx * 11 + 5) % 13 - 6) * 0.22
+    coords.push({
+      cx: Math.round((colX(col) + jx) * 10) / 10,
+      cy: Math.round((46 + row * 8 + jy) * 10) / 10,
+    })
+  }
+
+  // Zone South: indices 84–119, 3 rows × 12 cols, cy 72%–88%
+  for (let i = 0; i < 36; i++) {
+    const idx = 84 + i
+    const row = Math.floor(i / 12)
+    const col = i % 12
+    const jx = ((idx * 7 + 3) % 17 - 8) * 0.18
+    const jy = ((idx * 11 + 5) % 13 - 6) * 0.22
+    coords.push({
+      cx: Math.round((colX(col) + jx) * 10) / 10,
+      cy: Math.round((72 + row * 8 + jy) * 10) / 10,
+    })
+  }
+
+  return coords
+}
+
+export const TREE_COORDS = generateTreeCoords()
+
+export function conditionCount(p: { disease?: unknown; irrigation?: unknown; fertilizer?: unknown }): number {
+  return (p.disease ? 1 : 0) + (p.irrigation ? 1 : 0) + (p.fertilizer ? 1 : 0)
 }
 
 // ─── Per-plant special data ───────────────────────────────────────────────────
@@ -242,11 +299,36 @@ function buildPlants(): Plant[] {
   return Array.from({ length: 120 }, (_, i) => {
     const zone = getZone(i)
     const sp   = SPECIAL[i]
-    return { id: i + 1, gridIndex: i, zone, cultivar: CULTIVARS[zone], status: sp?.status ?? 'healthy', ...sp } as Plant
+    const base = {
+      id: i + 1, gridIndex: i, zone,
+      cultivar: CULTIVARS[zone],
+      status: sp?.status ?? 'healthy' as PlantStatus,
+      ...sp,
+    }
+    return {
+      ...base,
+      coords: TREE_COORDS[i],
+      conditionCount: conditionCount(base),
+    } as Plant
   })
 }
 
 export const ALL_PLANTS = buildPlants()
+
+// ─── Weather (static demo data) ──────────────────────────────────────────────
+export interface WeatherDay {
+  day: string
+  tempC: number
+  condition: 'sunny' | 'partly-cloudy' | 'cloudy'
+  note: string
+  highlight: boolean
+}
+
+export const DEMO_WEATHER: WeatherDay[] = [
+  { day: 'Today',    tempC: 28, condition: 'partly-cloudy', note: '',                        highlight: false },
+  { day: 'Tomorrow', tempC: 34, condition: 'sunny',         note: 'Heat · irrigate morning', highlight: true  },
+  { day: 'Sun 26',   tempC: 31, condition: 'partly-cloudy', note: '',                        highlight: false },
+]
 
 // ─── Interventions ────────────────────────────────────────────────────────────
 export const INITIAL_INTERVENTIONS: Intervention[] = [
@@ -255,55 +337,63 @@ export const INITIAL_INTERVENTIONS: Intervention[] = [
     plantLabels: 'A-14', plantCount: 1,
     title: 'Phytophthora cinnamomi treatment',
     detail: 'Fosetil-Al 3 g/L · reduce irrigation 30% · isolate root zone',
-    scheduledFor: 'today', done: false,
+    scheduledFor: 'today', done: false, overdue: true,
+    plantIds: [13],
   },
   {
     id: 'i2', priority: 'urgent', type: 'disease',
     plantLabels: 'B-10', plantCount: 1,
     title: 'Colletotrichum gloeosporioides treatment',
     detail: 'Copper oxychloride 3 kg/hL · remove affected fruit',
-    scheduledFor: 'today', done: false,
+    scheduledFor: 'today', done: false, overdue: false,
+    plantIds: [57],
   },
   {
     id: 'i3', priority: 'high', type: 'disease',
     plantLabels: 'A-31', plantCount: 1,
     title: 'Phytophthora monitoring — prob. 78%',
     detail: 'Monitor 48h · consider preventive treatment if worsening',
-    scheduledFor: 'within 48h', done: false,
+    scheduledFor: 'within 48h', done: false, overdue: false,
+    plantIds: [30],
   },
   {
     id: 'i4', priority: 'high', type: 'disease',
     plantLabels: 'C-08', plantCount: 1,
     title: 'Phytophthora cinnamomi treatment',
     detail: 'Fosetil-Al 3 g/L · improve perimeter drainage',
-    scheduledFor: 'tomorrow', done: false,
+    scheduledFor: 'tomorrow', done: false, overdue: false,
+    plantIds: [91],
   },
   {
     id: 'i5', priority: 'medium', type: 'irrigation',
     plantLabels: 'A-06, A-43, B-05, C-05, C-32', plantCount: 5,
     title: 'Scheduled irrigation',
     detail: 'Water stress detected · 25–40 min per tree · morning window',
-    scheduledFor: 'tomorrow 08:00', done: false,
+    scheduledFor: 'tomorrow 08:00', done: false, overdue: false,
+    plantIds: [5, 42, 52, 88, 115],
   },
   {
     id: 'i6', priority: 'medium', type: 'irrigation',
     plantLabels: 'C-32', plantCount: 1,
     title: 'Urgent irrigation',
     detail: 'Sap-flow at 59% of baseline · irrigate this evening',
-    scheduledFor: 'today 19:00', done: false,
+    scheduledFor: 'today 19:00', done: false, overdue: false,
+    plantIds: [115],
   },
   {
     id: 'i7', priority: 'low', type: 'fertilizer',
     plantLabels: 'Zone North — 12 trees', plantCount: 12,
     title: 'Nitrogen fertilisation (N)',
     detail: 'Ammonium nitrate 27% · dose 8 g/m² · deficiency confirmed by NDVI',
-    scheduledFor: '28 May', done: false,
+    scheduledFor: '28 May', done: false, overdue: false,
+    plantIds: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
   },
   {
     id: 'i8', priority: 'low', type: 'fertilizer',
     plantLabels: 'B-10, B-24, C-02, C-18', plantCount: 4,
     title: 'Calcium and phosphorus fertilisation',
     detail: 'Triple superphosphate + calcium nitrate · NDVI deficiency in central zone',
-    scheduledFor: '29 May', done: false,
+    scheduledFor: '29 May', done: false, overdue: false,
+    plantIds: [57, 71, 85, 101],
   },
 ]
