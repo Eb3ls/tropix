@@ -54,8 +54,17 @@ export function TreeCircles({ plants, selectedId, highlightedIds, treatedIds, zo
           ? TREATED_COLOR
           : STATUS_COLOR[plant.status]
 
-        const strokeWidth = (isSelected || isHighlighted ? 3 : 1.5) / zoom
+        const strokeWidth = (isSelected || isHighlighted ? 3 : plant.status === 'alert' ? 1.5 : 1) / zoom
         const isPulsing   = plant.status === 'alert' && !isTreated
+
+        // Alert rings stand out; monitoring rings are clearly present but not alarming;
+        // healthy rings are near-invisible — they exist to make the field legible, not
+        // to shout at the user.
+        const ringOpacity =
+          isSelected || isHighlighted ? 1
+          : plant.status === 'alert'      ? 0.9
+          : plant.status === 'monitoring' ? 0.4
+          : 0.3
 
         const label = plantLabel(plant)
         const tooltip = `${label} · ${isTreated ? 'Treated — awaiting confirmation' : plant.status}${plant.disease ? ` · ${plant.disease.name} ${plant.disease.probability}%` : ''}`
@@ -86,19 +95,20 @@ export function TreeCircles({ plants, selectedId, highlightedIds, treatedIds, zo
               fill="none"
               stroke={strokeColor}
               strokeWidth={strokeWidth}
-              opacity={isSelected || isHighlighted ? 1 : 0.85}
+              opacity={ringOpacity}
               style={isPulsing ? { animation: 'treePulse 2.2s ease-in-out infinite' } : undefined}
             />
 
-            {/* Center dot — terracotta pin, opacity varies by status */}
+            {/* Center dot */}
             <circle
               cx={cx} cy={cy}
               r={0.4 / zoom}
               fill={isTreated ? '#B8860B' : '#CC5427'}
               opacity={
                 isSelected || isHighlighted ? 1
-                : plant.status === 'healthy' ? 0.28
-                : 0.8
+                : plant.status === 'alert'      ? 0.85
+                : plant.status === 'monitoring' ? 0.45
+                : 0.2
               }
             />
 

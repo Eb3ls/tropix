@@ -49,10 +49,10 @@ describe('alert plant list', () => {
     })
   })
 
-  test('shows "Monitoring · N" section for monitoring-status plants', () => {
+  test('shows "Sensor alerts · N" section for monitoring-status plants', () => {
     sidebar()
     const monitorCount = ALL_PLANTS.filter(p => p.status === 'monitoring').length
-    expect(screen.getByText(`Monitoring · ${monitorCount}`)).toBeInTheDocument()
+    expect(screen.getByText(`Sensor alerts · ${monitorCount}`)).toBeInTheDocument()
   })
 
   test('shows OVERDUE badge for overdue non-treated plants', () => {
@@ -92,6 +92,11 @@ describe('pending action list', () => {
       // getAllByText accepts duplicates; just verify at least one match
       expect(screen.getAllByText(title).length).toBeGreaterThan(0)
     })
+  })
+
+  test('section is labelled "Scheduled actions"', () => {
+    sidebar()
+    expect(screen.getByText(/Scheduled actions/)).toBeInTheDocument()
   })
 
   test('does NOT render completed interventions', () => {

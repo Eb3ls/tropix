@@ -160,7 +160,7 @@ export function AlertSidebar({
             textTransform: 'uppercase',
             color: '#7A7060',
           }}>
-            Monitoring · {monitorPlants.length}
+            Sensor alerts · {monitorPlants.length}
           </div>
 
           {monitorPlants.map(plant => {
@@ -248,7 +248,7 @@ export function AlertSidebar({
           textTransform: 'uppercase',
           color: '#546357',
         }}>
-          Actions Today · {pendingActions.length}
+          Scheduled actions · {pendingActions.length}
         </div>
 
         {pendingActions.map(item => {
