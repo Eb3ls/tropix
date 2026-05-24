@@ -1,4 +1,4 @@
-import { AlertTriangle, Droplets, Leaf, Phone } from 'lucide-react'
+import { AlertTriangle, Droplets, Leaf } from 'lucide-react'
 import type { DiseaseRec, IrrigationRec, FertilizerRec } from '../../data/demoData'
 
 export function DiseaseCard({ d }: { d: DiseaseRec }) {
@@ -106,31 +106,24 @@ export function DiseaseCard({ d }: { d: DiseaseRec }) {
         </div>
       </div>
 
-      {/* CTA */}
-      <button
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          marginTop: '12px',
-          width: '100%',
-          padding: '9px 12px',
-          background: '#B83A2E',
-          color: '#F0EADB',
-          fontFamily: "'Barlow Semi Condensed', sans-serif",
-          fontSize: '13px',
-          fontWeight: 600,
-          borderRadius: '4px',
-          border: 'none',
-          cursor: 'pointer',
-          transition: 'background 150ms',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.background = '#9A2E23')}
-        onMouseLeave={e => (e.currentTarget.style.background = '#B83A2E')}
-      >
-        <Phone size={12} aria-hidden="true" /> Call agronomist
-      </button>
+      {/* Agronomist notification */}
+      <div style={{
+        marginTop: '12px',
+        padding: '8px 10px',
+        background: 'rgba(84,99,87,0.06)',
+        border: '1px solid rgba(84,99,87,0.18)',
+        borderRadius: '4px',
+        fontFamily: "'Barlow Semi Condensed', sans-serif",
+        fontSize: '12px',
+        color: '#7A7060',
+        lineHeight: 1.5,
+      }}>
+        Alert sent to <strong style={{ color: '#546357' }}>Dr. M. Conti</strong> (agronomist) · 23 May 07:31
+        <br />
+        <span style={{ color: '#CC5427', cursor: 'pointer', textDecoration: 'underline' }}>
+          Contact via TropiX →
+        </span>
+      </div>
     </div>
   )
 }
@@ -193,7 +186,10 @@ export function IrrigationCard({ r }: { r: IrrigationRec }) {
       {/* Sap-flow bar */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '11px', color: '#7A7060' }}>
+          <span
+            title="Compared to 14-day average for this tree"
+            style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '11px', color: '#7A7060', cursor: 'help' }}
+          >
             Sap-flow vs baseline
           </span>
           <span

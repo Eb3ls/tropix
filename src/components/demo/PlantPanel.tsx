@@ -6,9 +6,12 @@ import { DiseaseCard, IrrigationCard, FertilizerCard } from './DemoCards'
 interface Props {
   plant: Plant
   onClose: () => void
+  treated: boolean
+  overdue: boolean
+  onMarkTreated: () => void
 }
 
-export function PlantPanel({ plant, onClose }: Props) {
+export function PlantPanel({ plant, onClose, treated, overdue, onMarkTreated }: Props) {
   const statusLabel = plant.status === 'alert' ? 'Alert' : plant.status === 'monitoring' ? 'Monitoring' : 'Healthy'
   const statusColors = {
     alert:      { bg: 'rgba(184,58,46,0.08)', border: 'rgba(184,58,46,0.28)', text: '#B83A2E' },
@@ -131,6 +134,41 @@ export function PlantPanel({ plant, onClose }: Props) {
         >
           <em>{plant.cultivar}</em>
         </div>
+
+        {/* OVERDUE warning */}
+        {overdue && !treated && (
+          <div style={{
+            marginTop: '8px',
+            padding: '5px 10px',
+            background: 'rgba(184,58,46,0.08)',
+            border: '1px solid rgba(184,58,46,0.25)',
+            borderRadius: '4px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '10px',
+            color: '#B83A2E',
+            letterSpacing: '0.07em',
+          }}>
+            OVERDUE · 24h since detection · act immediately
+          </div>
+        )}
+
+        {/* Treated confirmation */}
+        {treated && (
+          <div style={{
+            marginTop: '8px',
+            padding: '5px 10px',
+            background: 'rgba(184,134,11,0.08)',
+            border: '1px solid rgba(184,134,11,0.25)',
+            borderRadius: '4px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '10px',
+            color: '#B8860B',
+            letterSpacing: '0.06em',
+          }}>
+            Treatment recorded · System monitoring for recovery
+            <span style={{ display: 'inline-block', marginLeft: '6px', animation: 'treePulse 2s ease-in-out infinite' }}>●</span>
+          </div>
+        )}
       </div>
 
       {/* ── Body ── */}
@@ -184,84 +222,32 @@ export function PlantPanel({ plant, onClose }: Props) {
         )}
       </div>
 
-      {/* ── Budget widget ── */}
-      <div
-        style={{
+      {/* ── Mark treated footer (only for non-healthy, non-treated plants) ── */}
+      {plant.status !== 'healthy' && !treated && (
+        <div style={{
           padding: '14px 18px',
           borderTop: '1px solid #BDB5A0',
           background: '#E8E1CF',
           flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '10px',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: '#7A7060',
-            marginBottom: '10px',
-          }}
-        >
-          Fertilizer budget · 2026 season
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-            marginBottom: '5px',
-          }}
-        >
-          <div
+        }}>
+          <button
+            onClick={onMarkTreated}
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '14px',
-              fontVariantNumeric: 'tabular-nums',
-              color: '#191E1A',
-              fontWeight: 700,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '6px', width: '100%', padding: '9px 12px',
+              background: 'transparent', border: '1px solid #BDB5A0',
+              borderRadius: '4px', cursor: 'pointer',
+              fontFamily: "'Barlow Semi Condensed', sans-serif",
+              fontSize: '13px', fontWeight: 500, color: '#7A7060',
+              transition: 'all 180ms',
             }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(58,122,78,0.07)'; e.currentTarget.style.borderColor = 'rgba(58,122,78,0.25)'; e.currentTarget.style.color = '#3A7A4E' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = '#BDB5A0'; e.currentTarget.style.color = '#7A7060' }}
           >
-            €720{' '}
-            <span style={{ fontWeight: 400, color: '#7A7060', fontSize: '12px' }}>/ €1,100</span>
-          </div>
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '12px',
-              fontVariantNumeric: 'tabular-nums',
-              fontWeight: 600,
-              color: '#CC5427',
-            }}
-          >
-            65%
-          </span>
+            ✓ Mark treatment done
+          </button>
         </div>
-        {/* Budget bar */}
-        <div
-          style={{
-            height: '4px',
-            background: 'rgba(189,181,160,0.35)',
-            borderRadius: '2px',
-            overflow: 'hidden',
-            marginBottom: '6px',
-          }}
-        >
-          <div style={{ width: '65%', height: '100%', background: '#CC5427', borderRadius: '2px' }} />
-        </div>
-        <div
-          style={{
-            fontFamily: "'Barlow Semi Condensed', sans-serif",
-            fontSize: '11px',
-            color: '#BDB5A0',
-          }}
-        >
-          AI end-of-season forecast:{' '}
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#7A7060', fontVariantNumeric: 'tabular-nums' }}>
-            €1,050
-          </span>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
