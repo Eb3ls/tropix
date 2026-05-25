@@ -60,7 +60,7 @@ export const ZONE_LABEL: Record<Zone, string> = {
 
 // ─── Style constants ──────────────────────────────────────────────────────────
 export const STATUS_COLOR: Record<PlantStatus, string> = {
-  healthy:    '#3A7A4E',
+  healthy:    '#48C063',   // medium spring-green — visible but not neon on aerial foliage
   monitoring: '#CC5427',
   alert:      '#B83A2E',
 }
@@ -85,29 +85,29 @@ export const CULTIVARS: Record<Zone, string> = {
 // Image is rendered with objectFit:fill so SVG % = image % directly.
 //
 // Column spacing: 7.7 % → 12 cols span ~88 %
-//   even rows: col 0 at 3.8 % → col 11 at 88.5 %
-//   odd rows:  col 0 at 7.65 % (+ half-step 3.85) → col 11 at 92.35 %
+//   even rows: col 0 at 4.0 % → col 11 at 88.7 %
+//   odd rows:  col 0 at 0.0 % (stagger -4) → col 11 at 84.7 %
 //
-// Row positions (absolute % of image height):
-//   Zone Nord   (rows 0–3, idx 0–47):   5, 14, 23, 32 %
-//   Zone Centro (rows 4–6, idx 48–83):  43, 52, 61 %
-//   Zone Sud    (rows 7–9, idx 84–119): 70, 79, 88 %
+// Row positions (absolute % of image height) — calibrated against aerial photo:
+//   Zone Nord   (rows 0–3,  idx 0–47):   8, 14, 23, 30 %
+//   Zone Centro (rows 4–7,  idx 48–95):  38, 45, 54, 61 %
+//   Zone Sud    (rows 8–11, idx 96–143): 68, 77, 84, 91 %
 //
 // Jitter: ±0.35 % (tight natural variation, does not displace from tree centre)
 function generateTreeCoords(): Array<{ cx: number; cy: number }> {
   const coords: Array<{ cx: number; cy: number }> = []
 
-  const COL_START  = 3.8
-  const COL_STEP   = 7.7
-  const COL_STAGGER = COL_STEP / 2   // 3.85 — offset for odd absolute rows
+  const COL_START   = 4      // first column of even rows (% of image width)
+  const COL_STEP    = 7.7
+  const COL_STAGGER = -4    // odd rows shift LEFT by 4 % (quincunx: right-stagger → left-stagger)
 
   const ZONE_ROWS = [
-    { rowCy: [5, 14, 23, 32], startIdx: 0,  absRowBase: 0 },
-    { rowCy: [43, 52, 61],    startIdx: 48, absRowBase: 4 },
-    { rowCy: [70, 79, 88],    startIdx: 84, absRowBase: 7 },
+    { rowCy: [8, 14, 23, 30],  startIdx: 0,  absRowBase: 0, zoneXShift:  0 },
+    { rowCy: [38, 45, 54, 61], startIdx: 48, absRowBase: 4, zoneXShift:  0 },
+    { rowCy: [68, 77, 84, 91], startIdx: 96, absRowBase: 7, zoneXShift: -2 },
   ]
 
-  for (const { rowCy, startIdx, absRowBase } of ZONE_ROWS) {
+  for (const { rowCy, startIdx, absRowBase, zoneXShift } of ZONE_ROWS) {
     for (let row = 0; row < rowCy.length; row++) {
       const absRow  = absRowBase + row
       const xOffset = absRow % 2 === 1 ? COL_STAGGER : 0
@@ -117,8 +117,12 @@ function generateTreeCoords(): Array<{ cx: number; cy: number }> {
         // Deterministic micro-jitter — different per tree, stays within ±0.35 %
         const jx = ((flatIdx * 7  + 3) % 7 - 3) * 0.117
         const jy = ((flatIdx * 11 + 5) % 7 - 3) * 0.117
+        const rawCx = COL_START + xOffset + col * COL_STEP + jx
+        // Left half (+2) corrects systematic left-drift in Nord/Centro zones.
+        // zoneXShift corrects Sud zone which is ~2% right of actual tree centres.
+        const cx = Math.round((rawCx + (rawCx <= 45 ? 2 : 0) + zoneXShift) * 10) / 10
         coords.push({
-          cx: Math.round((COL_START + xOffset + col * COL_STEP + jx) * 10) / 10,
+          cx,
           cy: Math.round((rowCy[row] + jy) * 10) / 10,
         })
       }
@@ -129,6 +133,18 @@ function generateTreeCoords(): Array<{ cx: number; cy: number }> {
 }
 
 export const TREE_COORDS = generateTreeCoords()
+
+// Trees that don't exist in the physical orchard:
+//   gridIndex 0   = A-01 (even row 0 col 0, cx≈6): bare earth, no tree at that spot
+//   gridIndex 12  = A-13 (odd row 1 col 0, cx=0): left road boundary
+//   gridIndex 36  = A-37 (odd row 3 col 0, cx=0): left road boundary
+//   gridIndex 60  = B-13 (odd row 5 col 0, cx=0): left road boundary
+//   gridIndex 84  = B-37 (odd row 7 col 0, cx=0): left road boundary
+//   gridIndex 96  = C-01 (odd row 7 col 0, cx=0): left road boundary — Sud zone
+//   gridIndex 108 = C-13 (even row 8 col 0, cx=4): bare earth
+//   gridIndex 120 = C-25 (odd row 9 col 0, cx=0): left road boundary — Sud zone
+//   gridIndex 132 = C-37 (even row 10 col 0, cx=4): bare earth
+export const ABSENT_GRID_INDICES = new Set([0, 12, 36, 60, 84, 96, 108, 120, 132])
 
 export function conditionCount(p: Partial<Pick<Plant, 'disease' | 'irrigation' | 'fertilizer'>>): number {
   return (p.disease ? 1 : 0) + (p.irrigation ? 1 : 0) + (p.fertilizer ? 1 : 0)
@@ -229,7 +245,8 @@ const SPECIAL: Record<number, Partial<Plant>> = {
       scheduledFor: '29 May',
     },
   },
-  91: {
+  // Sud plants — indices shifted +12 due to Centro gaining a row (boundary 84→96)
+  103: {  // was 91 → C-08
     status: 'alert',
     disease: {
       name: 'Phytophthora cinnamomi',
@@ -245,7 +262,7 @@ const SPECIAL: Record<number, Partial<Plant>> = {
       sapFlowPct: 52,
     },
   },
-  88: {
+  100: {  // was 88 → C-05
     status: 'monitoring',
     irrigation: {
       scheduledFor: 'tomorrow 08:30',
@@ -254,7 +271,7 @@ const SPECIAL: Record<number, Partial<Plant>> = {
       sapFlowPct: 65,
     },
   },
-  101: {
+  113: {  // was 101 → C-18
     status: 'monitoring',
     fertilizer: {
       nutrient: 'Iron (Fe)',
@@ -263,7 +280,7 @@ const SPECIAL: Record<number, Partial<Plant>> = {
       scheduledFor: '27 May',
     },
   },
-  115: {
+  127: {  // was 115 → C-32
     status: 'monitoring',
     irrigation: {
       scheduledFor: 'today 19:00',
@@ -282,15 +299,24 @@ const SPECIAL: Record<number, Partial<Plant>> = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 export function getZone(idx: number): Zone {
-  if (idx < 48) return 'Nord'
-  if (idx < 84) return 'Centro'
+  if (idx < 48)  return 'Nord'
+  if (idx < 96)  return 'Centro'
+  if (idx < 144) return 'Sud'
+  // Extension trees appended after index 143 (1 per even row, up to 2 per odd row)
+  // Nord:   144–147  Centro: 148–151  Sud: 152–157
+  if (idx < 148) return 'Nord'
+  if (idx < 152) return 'Centro'
   return 'Sud'
 }
 
 export function getZoneRelId(gridIndex: number): number {
-  if (gridIndex < 48) return gridIndex + 1
-  if (gridIndex < 84) return gridIndex - 48 + 1
-  return gridIndex - 84 + 1
+  if (gridIndex < 48)  return gridIndex + 1
+  if (gridIndex < 96)  return gridIndex - 48 + 1
+  if (gridIndex < 144) return gridIndex - 96 + 1
+  // Extension trees — continue numbering from 49 within their zone
+  if (gridIndex < 148) return 49 + (gridIndex - 144)
+  if (gridIndex < 152) return 49 + (gridIndex - 148)
+  return 49 + (gridIndex - 152)
 }
 
 export function plantLabel(plant: Plant): string {
@@ -299,7 +325,8 @@ export function plantLabel(plant: Plant): string {
 }
 
 function buildPlants(): Plant[] {
-  return Array.from({ length: 120 }, (_, i) => {
+  // ── Base 144 trees ───────────────────────────────────────────────────────────
+  const plants: Plant[] = Array.from({ length: 144 }, (_, i) => {
     const zone    = getZone(i)
     const sp      = SPECIAL[i]
     const status: PlantStatus = sp?.status ?? 'healthy'
@@ -319,6 +346,46 @@ function buildPlants(): Plant[] {
       conditionCount: conditionCount(base),
     }
   })
+
+  // ── Extension trees: right-edge columns completing the quincunx ──────────────
+  // Even rows +1 extra col (col 12); odd rows +2 extra cols (cols 12 & 13).
+  // Col 13 of odd rows lands at rawCx≈100.1 → kept only for Sud (cx=98.1 after
+  // zone shift); filtered for Nord/Centro (cx≥99, outside image).
+  // Appended after index 143 so all SPECIAL gridIndex references stay valid.
+  const EXT_ZONES: Array<{ rowCy: number[]; absRowBase: number; zoneXShift: number; zone: Zone }> = [
+    { rowCy: [8, 14, 23, 30],  absRowBase: 0, zoneXShift:  0, zone: 'Nord'   },
+    { rowCy: [38, 45, 54, 61], absRowBase: 4, zoneXShift:  0, zone: 'Centro' },
+    { rowCy: [68, 77, 84, 91], absRowBase: 7, zoneXShift: -2, zone: 'Sud'    },
+  ]
+  const C0 = 4, CS = 7.7, CG = -4   // COL_START, COL_STEP, COL_STAGGER
+
+  for (const { rowCy, absRowBase, zoneXShift, zone } of EXT_ZONES) {
+    for (let row = 0; row < rowCy.length; row++) {
+      const absRow    = absRowBase + row
+      const isOdd     = absRow % 2 === 1
+      const xOff      = isOdd ? CG : 0
+      const extraCols = isOdd ? [12, 13] : [12]
+
+      for (const col of extraCols) {
+        const rawCx = C0 + xOff + col * CS
+        const cx    = Math.round((rawCx + (rawCx <= 45 ? 2 : 0) + zoneXShift) * 10) / 10
+        if (cx >= 99 || cx < 2) continue   // outside image bounds
+
+        const gIdx = plants.length
+        plants.push({
+          id:             gIdx + 1,
+          gridIndex:      gIdx,
+          zone,
+          cultivar:       CULTIVARS[zone],
+          status:         'healthy',
+          coords:         { cx, cy: rowCy[row] },
+          conditionCount: 0,
+        })
+      }
+    }
+  }
+
+  return plants
 }
 
 export const ALL_PLANTS = buildPlants()
@@ -359,7 +426,7 @@ export const INITIAL_INTERVENTIONS: Intervention[] = [
   {
     id: 'i3', priority: 'high', type: 'disease',
     plantLabels: 'A-31', plantCount: 1,
-    title: 'Phytophthora monitoring — prob. 78%',
+    title: 'Phytophthora monitoring',
     detail: 'Monitor 48h · consider preventive treatment if worsening',
     scheduledFor: 'within 48h', done: false, overdue: false,
     plantIds: [30],
@@ -370,7 +437,7 @@ export const INITIAL_INTERVENTIONS: Intervention[] = [
     title: 'Phytophthora cinnamomi treatment',
     detail: 'Fosetil-Al 3 g/L · improve perimeter drainage',
     scheduledFor: 'tomorrow', done: false, overdue: false,
-    plantIds: [91],
+    plantIds: [103],
   },
   {
     id: 'i5', priority: 'medium', type: 'irrigation',
@@ -378,15 +445,15 @@ export const INITIAL_INTERVENTIONS: Intervention[] = [
     title: 'Scheduled irrigation',
     detail: 'Water stress detected · 25–40 min per tree · morning window',
     scheduledFor: 'tomorrow 08:00', done: false, overdue: false,
-    plantIds: [5, 42, 88],
+    plantIds: [5, 42, 100],
   },
   {
     id: 'i6', priority: 'medium', type: 'irrigation',
     plantLabels: 'B-05, C-32', plantCount: 2,
-    title: 'Urgent irrigation',
+    title: 'Water stress irrigation',
     detail: 'Water stress detected in both trees · irrigate this evening',
     scheduledFor: 'today evening', done: false, overdue: false,
-    plantIds: [52, 115],
+    plantIds: [52, 127],
   },
   {
     id: 'i7', priority: 'low', type: 'fertilizer',
@@ -402,6 +469,6 @@ export const INITIAL_INTERVENTIONS: Intervention[] = [
     title: 'Calcium and phosphorus fertilisation',
     detail: 'Triple superphosphate + calcium nitrate · NDVI deficiency in central zone',
     scheduledFor: '29 May', done: false, overdue: false,
-    plantIds: [57, 71, 85, 101],
+    plantIds: [57, 71, 97, 113],
   },
 ]

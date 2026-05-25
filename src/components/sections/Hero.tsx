@@ -11,8 +11,7 @@ const stats: { label: string; value: string }[] = [
 
 const instruments = [
   { code: 'DISEASE DETECTION LEAD', value: '14', unit: 'days' },
-  { code: 'SENSOR GRANULARITY', value: 'Per', unit: 'tree' },
-  { code: 'YIELD FORECAST ACCURACY', value: '±25', unit: '%' },
+  { code: 'SENSOR GRANULARITY',     value: 'Per', unit: 'tree' },
 ] as const
 
 /** Staggered CSS animation helper */
@@ -191,15 +190,23 @@ export function Hero() {
                 window.dispatchEvent(new HashChangeEvent('hashchange'))
               }}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                color: 'rgba(232,225,207,0.55)',
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                color: 'rgba(232,225,207,0.80)',
                 fontFamily: "'Barlow Semi Condensed', sans-serif",
-                fontSize: '14px', fontWeight: 400,
+                fontSize: '15px', fontWeight: 500,
+                padding: '12px 20px', borderRadius: '4px',
+                border: '1px solid rgba(232,225,207,0.22)',
                 textDecoration: 'none',
-                transition: 'color 200ms',
+                transition: 'border-color 200ms, color 200ms',
               }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#CC5427')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.55)')}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(232,225,207,0.5)'
+                e.currentTarget.style.color = '#E8E1CF'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'rgba(232,225,207,0.22)'
+                e.currentTarget.style.color = 'rgba(232,225,207,0.80)'
+              }}
             >
               View demo <ArrowRight size={13} />
             </a>
@@ -230,8 +237,8 @@ export function Hero() {
                 key={inst.code}
                 style={{
                   paddingBottom: '20px',
-                  borderBottom: i < 2 ? '1px solid rgba(232,225,207,0.1)' : undefined,
-                  marginBottom: i < 2 ? '20px' : undefined,
+                  borderBottom: i < instruments.length - 1 ? '1px solid rgba(232,225,207,0.1)' : undefined,
+                  marginBottom: i < instruments.length - 1 ? '20px' : undefined,
                 }}
               >
                 <div style={{

@@ -1,134 +1,196 @@
 // src/components/demo/TreeCircles.tsx
+//
+// CSS-div markers — border-radius:50% guarantees perfect circles.
+// Sizes derived from mapHeight so markers maintain consistent visual proportion
+// regardless of viewport size.
+import { type CSSProperties } from 'react'
 import { type Plant, STATUS_COLOR, plantLabel } from '../../data/demoData'
 
-// Base radius in SVG viewBox units (0–100 space).
-// At zoom=1, image ~800px wide → 1 unit = 8px → BASE_R=1.8 → r≈14.4px on screen.
-const BASE_R = 1.8
+// Size ratios relative to map container height.
+// At mapHeight=640: ring=26px, alert dot=12px, healthy dot=7px — good proportions.
+const RING_RATIO = 0.040          // outer ring diameter
+const DOT_RATIO = {
+  alert:      0.019,
+  monitoring: 0.015,
+  healthy:    0.013,   // slightly larger — needs to pop against green aerial foliage
+}
+const RING_STROKE_RATIO = 0.0023  // ring border width
+const HIT_RATIO         = 0.068   // invisible click target
 
-// Amber color for "treated · awaiting confirmation" state
 const TREATED_COLOR = '#B8860B'
 
 interface Props {
-  plants: Plant[]
-  selectedId: number | null
-  highlightedIds: Set<number>   // gridIndex values to highlight (multi-tree action)
-  treatedIds: Set<number>       // gridIndex values marked as treated
-  zoom: number
-  onTreeClick: (plant: Plant) => void
+  plants:         Plant[]
+  selectedId:     number | null
+  highlightedIds: Set<number>
+  treatedIds:     Set<number>
+  zoom:           number
+  /** Map container height in px — sizes are derived as ratios of this value. */
+  mapHeight:      number
+  /** When true, shows tree ID + cx/cy on each marker for position calibration. */
+  showDebug?:     boolean
+  onTreeClick:    (plant: Plant) => void
 }
 
-export function TreeCircles({ plants, selectedId, highlightedIds, treatedIds, zoom, onTreeClick }: Props) {
-  const r = BASE_R / zoom
+const pulse: CSSProperties = { animation: 'markerRingPulse 2.4s ease-in-out infinite' }
+
+export function TreeCircles({
+  plants, selectedId, highlightedIds, treatedIds, zoom, mapHeight, showDebug = false, onTreeClick,
+}: Props) {
+  // s counteracts parent CSS transform:scale(zoom) → constant screen size at all zoom levels
+  const s = 1 / zoom
+
+  // Derive all sizes from mapHeight (proportional) × s (zoom compensation)
+  const ringD   = mapHeight * RING_RATIO   * s
+  const hitD    = mapHeight * HIT_RATIO    * s
+  const strokeW = mapHeight * RING_STROKE_RATIO * s
+  const dotD    = {
+    alert:      mapHeight * DOT_RATIO.alert      * s,
+    monitoring: mapHeight * DOT_RATIO.monitoring * s,
+    healthy:    mapHeight * DOT_RATIO.healthy     * s,
+  }
 
   return (
-    // viewBox 0 0 100 100 — all coordinates are percentages of image dimensions
-    <svg
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        overflow: 'visible',
-      }}
-    >
-      <defs>
-        <style>{`
-          @keyframes treePulse {
-            0%, 100% { opacity: 0.9; }
-            50%       { opacity: 0.4; }
-          }
-        `}</style>
-      </defs>
+    <>
+      <style>{`
+        @keyframes markerRingPulse {
+          0%, 100% { opacity: 0.9; }
+          50%       { opacity: 0.15; }
+        }
+      `}</style>
 
-      {plants.map(plant => {
-        const { cx, cy } = plant.coords
-        const isSelected    = plant.gridIndex === selectedId
-        const isHighlighted = highlightedIds.has(plant.gridIndex)
-        const isTreated     = treatedIds.has(plant.gridIndex)
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        {plants.map(plant => {
+          const { cx, cy } = plant.coords
+          const isSelected    = plant.gridIndex === selectedId
+          const isHighlighted = highlightedIds.has(plant.gridIndex)
+          const isTreated     = treatedIds.has(plant.gridIndex)
 
-        const strokeColor = isSelected || isHighlighted
-          ? '#CC5427'
-          : isTreated
-          ? TREATED_COLOR
-          : STATUS_COLOR[plant.status]
+          // ── Dot ──────────────────────────────────────────────────────────
+          const statusKey  = plant.status as keyof typeof dotD
+          const thisDotD   = isTreated ? dotD.monitoring : (dotD[statusKey] ?? dotD.healthy)
+          const dotColor   = isTreated ? TREATED_COLOR : STATUS_COLOR[plant.status]
+          const dotOpacity = isSelected || isHighlighted ? 1
+            : isTreated                     ? 0.65
+            : plant.status === 'alert'      ? 0.95
+            : plant.status === 'monitoring' ? 0.78
+            : 0.82   // healthy — raised from 0.40 to pop against aerial foliage
 
-        const strokeWidth = (isSelected || isHighlighted ? 3 : plant.status === 'alert' ? 1.5 : 1) / zoom
-        const isPulsing   = plant.status === 'alert' && !isTreated
+          // ── Ring ─────────────────────────────────────────────────────────
+          const ringColor   = isSelected || isHighlighted ? '#E8E1CF' : STATUS_COLOR[plant.status]
+          const ringOpacity = isSelected || isHighlighted ? 1
+            : plant.status === 'alert'      ? 0.92
+            : plant.status === 'monitoring' ? 0.65
+            : 0.72   // healthy — raised from 0.44
+          const thisStroke  = isSelected || isHighlighted ? strokeW * 1.4 : strokeW
+          const isPulsing   = plant.status === 'alert' && !isTreated && !isSelected && !isHighlighted
 
-        // Alert rings stand out; monitoring rings are clearly present but not alarming;
-        // healthy rings are near-invisible — they exist to make the field legible, not
-        // to shout at the user.
-        const ringOpacity =
-          isSelected || isHighlighted ? 1
-          : plant.status === 'alert'      ? 0.9
-          : plant.status === 'monitoring' ? 0.4
-          : 0.3
+          const label   = plantLabel(plant)
+          const tooltip = `${label} · ${isTreated ? 'Treated — awaiting confirmation' : plant.status}${
+            plant.disease ? ` · ${plant.disease.name} ${plant.disease.probability}%` : ''
+          }`
 
-        const label = plantLabel(plant)
-        const tooltip = `${label} · ${isTreated ? 'Treated — awaiting confirmation' : plant.status}${plant.disease ? ` · ${plant.disease.name} ${plant.disease.probability}%` : ''}`
+          return (
+            <div
+              key={plant.id}
+              role="button"
+              tabIndex={0}
+              aria-label={tooltip}
+              title={tooltip}
+              onClick={() => onTreeClick(plant)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTreeClick(plant) }
+              }}
+              style={{
+                position:   'absolute',
+                left:       `${cx}%`,
+                top:        `${cy}%`,
+                width:      `${hitD}px`,
+                height:     `${hitD}px`,
+                transform:  'translate(-50%, -50%)',
+                display:    'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor:         'pointer',
+                pointerEvents:  'auto',
+              }}
+            >
+              {/* Ring — visible on all trees */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position:     'absolute',
+                  width:        `${ringD}px`,
+                  height:       `${ringD}px`,
+                  borderRadius: '50%',
+                  border:       `${thisStroke}px solid ${ringColor}`,
+                  opacity:       ringOpacity,
+                  boxSizing:    'border-box',
+                  ...(isPulsing ? pulse : {}),
+                }}
+              />
 
-        return (
-          <g
-            key={plant.id}
-            onClick={() => onTreeClick(plant)}
-            role="button"
-            tabIndex={0}
-            aria-label={tooltip}
-            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTreeClick(plant) } }}
-            style={{ cursor: 'pointer' }}
-          >
-            <title>{tooltip}</title>
+              {/* Center dot */}
+              <div
+                aria-hidden="true"
+                style={{
+                  width:           `${thisDotD}px`,
+                  height:          `${thisDotD}px`,
+                  borderRadius:    '50%',
+                  backgroundColor: dotColor,
+                  opacity:         dotOpacity,
+                  flexShrink:      0,
+                }}
+              />
 
-            {/* Invisible hit area (larger than visual circle) */}
-            <circle
-              cx={cx} cy={cy}
-              r={r * 1.6}
-              fill="transparent"
-            />
+              {/* Multi-condition badge ×N */}
+              {plant.conditionCount > 1 && (
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position:   'absolute',
+                    top:        `${-3 * s}px`,
+                    right:      `${-1 * s}px`,
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize:   `${mapHeight * 0.012 * s}px`,
+                    color:       ringColor,
+                    lineHeight:  1,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  ×{plant.conditionCount}
+                </span>
+              )}
 
-            {/* Status ring */}
-            <circle
-              cx={cx} cy={cy}
-              r={r}
-              fill="none"
-              stroke={strokeColor}
-              strokeWidth={strokeWidth}
-              opacity={ringOpacity}
-              style={isPulsing ? { animation: 'treePulse 2.2s ease-in-out infinite' } : undefined}
-            />
-
-            {/* Center dot */}
-            <circle
-              cx={cx} cy={cy}
-              r={0.4 / zoom}
-              fill={isTreated ? '#B8860B' : '#CC5427'}
-              opacity={
-                isSelected || isHighlighted ? 1
-                : plant.status === 'alert'      ? 0.85
-                : plant.status === 'monitoring' ? 0.45
-                : 0.2
-              }
-            />
-
-            {/* Multi-condition badge ×N (offset top-right of ring) */}
-            {plant.conditionCount > 1 && (
-              <text
-                x={cx + r * 0.65}
-                y={cy - r * 0.65}
-                fontSize={0.9 / zoom}
-                fontFamily="'IBM Plex Mono', monospace"
-                fill={strokeColor}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                ×{plant.conditionCount}
-              </text>
-            )}
-          </g>
-        )
-      })}
-    </svg>
+              {/* Debug label — tree ID + coords, shown only when showDebug=true */}
+              {showDebug && (
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position:    'absolute',
+                    top:         `${(ringD / 2 + 3 * s)}px`,
+                    left:        '50%',
+                    transform:   'translateX(-50%)',
+                    background:  'rgba(0,0,0,0.82)',
+                    color:       '#FFE600',
+                    fontFamily:  "'IBM Plex Mono', monospace",
+                    fontSize:    `${9 * s}px`,
+                    padding:     `${1.5 * s}px ${3 * s}px`,
+                    borderRadius:`${2 * s}px`,
+                    whiteSpace:  'nowrap',
+                    pointerEvents: 'none',
+                    lineHeight:   1.4,
+                    textAlign:   'center',
+                  }}
+                >
+                  {label}<br />
+                  <span style={{ opacity: 0.75 }}>{cx} / {cy}</span>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </>
   )
 }

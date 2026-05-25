@@ -43,16 +43,6 @@ export function Team() {
           <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#BDB5A0' }}>THE TEAM</span>
         </div>
 
-        <h2
-          style={{
-            fontFamily: "'DM Serif Display', serif",
-            fontSize: 'clamp(36px, 4.5vw, 56px)',
-            lineHeight: 1.05, fontWeight: 400, color: '#191E1A',
-            marginBottom: '16px', textWrap: 'balance',
-          }}
-        >
-          Built in Trento. Tested in Sicily.
-        </h2>
         <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#7A7060', maxWidth: '560px', marginBottom: '56px' }}>
           Five founders: three AI software engineers, one industrial engineer,
           one computer-science student. Seed round in progress.

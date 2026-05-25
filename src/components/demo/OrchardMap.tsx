@@ -2,17 +2,24 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 import { TreeCircles } from './TreeCircles'
 import { ZoomControls } from './ZoomControls'
 import { computeWheelZoom } from './orchardMapMath'
-import { type Plant, CULTIVARS, ZONE_LABEL, type Zone } from '../../data/demoData'
+import { type Plant, ABSENT_GRID_INDICES } from '../../data/demoData'
 
 const MIN_ZOOM = 0.8
 const MAX_ZOOM = 4.0
 const ZOOM_STEP = 0.25
 
-const ZONES: Array<{ zone: Zone; cy: string }> = [
-  { zone: 'Nord',   cy: '2%'  },
-  { zone: 'Centro', cy: '38%' },
-  { zone: 'Sud',    cy: '65%' },
-]
+// Row cy positions (% of image height) — calibrated against aerial photo
+const DEBUG_ROWS = [8, 14, 23, 30, 38, 45, 54, 61, 68, 77, 84, 91]
+
+// Column cx positions (% of image width) — mirrors the +2 left-half correction in demoData
+const COL_START = 4, COL_STEP = 7.7, COL_STAGGER = -4
+const debugShift = (cx: number) => cx <= 45 ? cx + 2 : cx
+const DEBUG_COLS_EVEN = Array.from({ length: 12 }, (_, i) =>
+  debugShift(Math.round((COL_START + i * COL_STEP) * 10) / 10)
+)
+const DEBUG_COLS_ODD = Array.from({ length: 12 }, (_, i) =>
+  debugShift(Math.round((COL_START + COL_STAGGER + i * COL_STEP) * 10) / 10)
+).filter(c => c >= 2)
 
 interface Props {
   plants: Plant[]
@@ -29,6 +36,11 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
   const containerRef  = useRef<HTMLDivElement>(null)
   const [tf, setTf]   = useState<Transform>({ scale: 1, x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
+  // mapHeight drives proportional marker sizes — constant visual proportion
+  // across all viewport sizes regardless of px screen dimensions.
+  const [mapHeight, setMapHeight] = useState(640)
+  // Debug grid — toggle with D key; shows row lines + per-tree coords for calibration
+  const [debugGrid, setDebugGrid] = useState(false)
   /** Stores only the *previous* mouse position — no stale transform snapshot. */
   const dragRef       = useRef<{ prevX: number; prevY: number } | null>(null)
 
@@ -73,6 +85,29 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
     }
     el.addEventListener('wheel', onWheel as EventListener, { passive: false } as AddEventListenerOptions)
     return () => el.removeEventListener('wheel', onWheel as EventListener)
+  }, [])
+
+  // ── D key toggles calibration debug grid ─────────────────────────────────
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'd' || e.key === 'D') setDebugGrid(prev => !prev)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
+  // ── Proportional marker size — tracks container height ───────────────────
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const update = () => {
+      const { height } = el.getBoundingClientRect()
+      if (height > 0) setMapHeight(height)
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
   }, [])
 
   // ── Drag to pan (only when zoomed in) ─────────────────────────────────────
@@ -197,38 +232,99 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           style={{ width: '100%', height: '100%', display: 'block' }}
         />
 
-        {/* SVG circle overlay */}
+        {/* Tree marker overlay — absent trees (road boundary + bare-earth spots) are excluded */}
         <TreeCircles
-          plants={plants}
+          plants={plants.filter(p => !ABSENT_GRID_INDICES.has(p.gridIndex))}
           selectedId={selectedId}
           highlightedIds={highlightedIds}
           treatedIds={treatedIds}
           zoom={tf.scale}
+          mapHeight={mapHeight}
+          showDebug={debugGrid}
           onTreeClick={onTreeClick}
         />
 
-        {/* Zone labels */}
-        {ZONES.map(({ zone, cy }) => (
+        {/* Debug grid — horizontal row lines */}
+        {debugGrid && DEBUG_ROWS.map(rowCy => (
           <div
-            key={zone}
+            key={`row-${rowCy}`}
             aria-hidden="true"
             style={{
-              position: 'absolute',
-              top: cy,
-              left: '12px',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: `${11 / tf.scale}px`,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: 'rgba(232,225,207,0.65)',
+              position: 'absolute', left: 0, right: 0,
+              top: `${rowCy}%`,
+              height: `${1 / tf.scale}px`,
+              background: 'rgba(255,230,0,0.65)',
               pointerEvents: 'none',
-              lineHeight: 1.4,
-              textShadow: `0 ${1/tf.scale}px ${4/tf.scale}px rgba(0,0,0,0.9), 0 0 ${10/tf.scale}px rgba(0,0,0,0.5)`,
+              display: 'flex', alignItems: 'center',
             }}
           >
-            <span style={{ color: 'rgba(232,225,207,0.35)' }}>Zone {ZONE_LABEL[zone]}</span>
-            {' · '}
-            <em style={{ fontStyle: 'italic' }}>{CULTIVARS[zone].split('—')[1]?.trim()}</em>
+            <span style={{
+              background: 'rgba(0,0,0,0.82)', color: '#FFE600',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: `${9 / tf.scale}px`,
+              padding: `${1.5 / tf.scale}px ${4 / tf.scale}px`,
+              borderRadius: `${2 / tf.scale}px`,
+              lineHeight: 1, whiteSpace: 'nowrap',
+              marginLeft: `${4 / tf.scale}px`,
+            }}>
+              cy={rowCy}
+            </span>
+          </div>
+        ))}
+
+        {/* Debug grid — vertical column lines: even rows (cyan) */}
+        {debugGrid && DEBUG_COLS_EVEN.map(colCx => (
+          <div
+            key={`ce-${colCx}`}
+            aria-hidden="true"
+            style={{
+              position: 'absolute', top: 0, bottom: 0,
+              left: `${colCx}%`,
+              width: `${1 / tf.scale}px`,
+              background: 'rgba(0,210,255,0.45)',
+              pointerEvents: 'none',
+              display: 'flex', alignItems: 'flex-start',
+            }}
+          >
+            <span style={{
+              background: 'rgba(0,0,0,0.75)', color: '#00D2FF',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: `${8 / tf.scale}px`,
+              padding: `${1 / tf.scale}px ${2 / tf.scale}px`,
+              lineHeight: 1, whiteSpace: 'nowrap',
+              marginTop: `${4 / tf.scale}px`,
+              writingMode: 'vertical-rl',
+            }}>
+              {colCx}
+            </span>
+          </div>
+        ))}
+
+        {/* Debug grid — vertical column lines: odd rows (orange) */}
+        {debugGrid && DEBUG_COLS_ODD.map(colCx => (
+          <div
+            key={`co-${colCx}`}
+            aria-hidden="true"
+            style={{
+              position: 'absolute', top: 0, bottom: 0,
+              left: `${colCx}%`,
+              width: `${1 / tf.scale}px`,
+              background: 'rgba(255,140,0,0.45)',
+              pointerEvents: 'none',
+              display: 'flex', alignItems: 'flex-start',
+            }}
+          >
+            <span style={{
+              background: 'rgba(0,0,0,0.75)', color: '#FF8C00',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: `${8 / tf.scale}px`,
+              padding: `${1 / tf.scale}px ${2 / tf.scale}px`,
+              lineHeight: 1, whiteSpace: 'nowrap',
+              marginTop: `${24 / tf.scale}px`,
+              writingMode: 'vertical-rl',
+            }}>
+              {colCx}
+            </span>
           </div>
         ))}
 
@@ -248,6 +344,32 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           Last flight · 24 May · 06:47 · Drone survey
         </div>
       </div>
+
+      {/* Debug banner — outside transform, fixed screen position */}
+      {debugGrid && (
+        <div
+          aria-hidden="true"
+          style={{
+            position:   'absolute',
+            top: '8px', left: '8px', right: '56px',
+            zIndex:      20,
+            background:  'rgba(0,0,0,0.88)',
+            color:       '#FFE600',
+            fontFamily:  "'IBM Plex Mono', monospace",
+            fontSize:    '10px',
+            padding:     '6px 12px',
+            borderRadius:'4px',
+            pointerEvents: 'none',
+            display:     'flex',
+            gap:         '20px',
+            flexWrap:    'wrap',
+          }}
+        >
+          <span>⚙ DEBUG · press D to exit</span>
+          <span>Yellow lines = row cy positions (% of height)</span>
+          <span>Each marker = tree ID · cx / cy</span>
+        </div>
+      )}
 
       {/* Edge vignette — frames the aerial photo, gives cockpit depth */}
       <div

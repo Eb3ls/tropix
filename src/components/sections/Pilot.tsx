@@ -17,11 +17,11 @@ export function Pilot() {
             </div>
 
             <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(32px, 4vw, 48px)', lineHeight: 1.08, fontWeight: 400, color: '#191E1A', marginBottom: '20px', textWrap: 'balance' }}>
-              Eight farms will have the most precise view of their avocado and mango. Yours could be one of them.
+              Three farms will have the most precise view of their avocado and mango. Yours could be one of them.
             </h2>
 
             <p style={{ fontSize: '17px', lineHeight: 1.55, color: '#7A7060', marginBottom: '16px' }}>
-              The 2026 pilot cohort opens to eight avocado or mango farms in Sicily, Calabria, or Puglia. Hardware is on loan. No upfront investment. The annual fee is subsidised for the founding cohort. Three-year contracts begin{' '}
+              The 2026 pilot cohort opens to three avocado or mango farms in Sicily, Calabria, or Puglia. Hardware is on loan. No upfront investment. The annual fee is subsidised for the founding cohort. Three-year contracts begin{' '}
               <span style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#191E1A' }}>Q2 2026</span>.
             </p>
 
@@ -32,7 +32,7 @@ export function Pilot() {
             {/* Meta grid */}
             <div className="grid grid-cols-3" style={{ gap: '32px', borderTop: '1px solid #BDB5A0', borderBottom: '1px solid #BDB5A0', padding: '32px 0', marginBottom: '40px' }}>
               {[
-                { label: 'COHORT SIZE',      value: '8 farms' },
+                { label: 'COHORT SIZE',      value: '3 farms' },
                 { label: 'CONTRACT LENGTH',  value: '3 years' },
                 { label: 'MINIMUM SURFACE',  value: '5 ha'    },
               ].map(item => (
