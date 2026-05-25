@@ -220,9 +220,10 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
               fontSize: `${11 / tf.scale}px`,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              color: 'rgba(232,225,207,0.5)',
+              color: 'rgba(232,225,207,0.65)',
               pointerEvents: 'none',
               lineHeight: 1.4,
+              textShadow: `0 ${1/tf.scale}px ${4/tf.scale}px rgba(0,0,0,0.9), 0 0 ${10/tf.scale}px rgba(0,0,0,0.5)`,
             }}
           >
             <span style={{ color: 'rgba(232,225,207,0.35)' }}>Zone {ZONE_LABEL[zone]}</span>
@@ -247,6 +248,17 @@ export function OrchardMap({ plants, selectedId, highlightedIds, treatedIds, onT
           Last flight · 24 May · 06:47 · Drone survey
         </div>
       </div>
+
+      {/* Edge vignette — frames the aerial photo, gives cockpit depth */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(25,30,26,0.55) 100%)',
+        }}
+      />
 
       {/* Zoom controls — outside transform, stays at fixed screen position */}
       <ZoomControls

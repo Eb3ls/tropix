@@ -192,35 +192,34 @@ export function Demo() {
         padding: '0 24px',
         height: '52px',
         flexShrink: 0,
-        background: '#F0EADB',
-        borderBottom: '1px solid #BDB5A0',
+        background: '#191E1A',
+        borderBottom: '1px solid rgba(255,255,255,0.12)',
         zIndex: 20,
       }}>
         {/* Grain */}
         <div aria-hidden="true" style={{
           position: 'absolute', inset: 0,
           backgroundImage: GRAIN, backgroundSize: '256px 256px',
-          opacity: 0.04, mixBlendMode: 'multiply', pointerEvents: 'none',
+          opacity: 0.06, mixBlendMode: 'overlay', pointerEvents: 'none',
         }} />
 
         {/* Left: wordmark + farm name + KPI chips */}
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '20px', color: '#191E1A', fontWeight: 400 }}>
+          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '20px', color: '#E8E1CF', fontWeight: 400 }}>
             Tropi<em style={{ color: '#CC5427', fontStyle: 'italic' }}>X</em>
           </span>
 
-          <div aria-hidden="true" style={{ width: '1px', height: '18px', background: '#BDB5A0' }} />
+          <div aria-hidden="true" style={{ width: '1px', height: '18px', background: 'rgba(232,225,207,0.15)' }} />
 
-          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '12px', color: '#7A7060' }}>
+          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '12px', color: 'rgba(232,225,207,0.5)' }}>
             Az. Agr. Greco · Ragusa, Sicilia · 8.3 ha
           </span>
 
-          {/* KPI chips — tight inner group so · reads as punctuation, not a gap */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <span style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: '11px',
-              color: '#546357',
+              color: 'rgba(232,225,207,0.55)',
               letterSpacing: '0.06em',
               fontVariantNumeric: 'tabular-nums',
             }}>
@@ -229,11 +228,11 @@ export function Demo() {
 
             {alertCount > 0 && (
               <>
-                <span aria-hidden="true" style={{ color: '#BDB5A0', fontSize: '10px' }}>·</span>
+                <span aria-hidden="true" style={{ color: 'rgba(232,225,207,0.2)', fontSize: '10px' }}>·</span>
                 <span style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: '11px',
-                  color: '#B83A2E',
+                  color: '#E05A3A',
                   letterSpacing: '0.06em',
                   fontVariantNumeric: 'tabular-nums',
                 }}>
@@ -242,7 +241,6 @@ export function Demo() {
               </>
             )}
           </div>
-
 
           {/* DEMO badge */}
           <span style={{
@@ -267,11 +265,11 @@ export function Demo() {
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
               fontFamily: "'IBM Plex Mono', monospace", fontSize: '10px',
-              letterSpacing: '0.08em', color: '#BDB5A0',
+              letterSpacing: '0.08em', color: 'rgba(232,225,207,0.3)',
               transition: 'color 180ms',
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#546357')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#BDB5A0')}
+            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.7)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.3)')}
           >
             RESET
           </button>
@@ -282,11 +280,11 @@ export function Demo() {
             style={{
               display: 'flex', alignItems: 'center', gap: '5px',
               fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '12px',
-              color: '#7A7060', textDecoration: 'none',
+              color: 'rgba(232,225,207,0.5)', textDecoration: 'none',
               transition: 'color 200ms',
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#191E1A')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#7A7060')}
+            onMouseEnter={e => (e.currentTarget.style.color = '#E8E1CF')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(232,225,207,0.5)')}
           >
             <ArrowLeft size={13} aria-hidden="true" /> Back to site
           </a>

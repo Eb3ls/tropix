@@ -14,7 +14,7 @@ export function DiseaseCard({ d }: { d: DiseaseRec }) {
       }}
     >
       {/* Eyebrow */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
         <AlertTriangle size={12} style={{ color: '#B83A2E', flexShrink: 0 }} strokeWidth={2} aria-hidden="true" />
         <span
           style={{
@@ -29,59 +29,83 @@ export function DiseaseCard({ d }: { d: DiseaseRec }) {
         </span>
       </div>
 
-      {/* Disease name */}
-      <div
-        style={{
-          fontFamily: "'DM Serif Display', serif",
-          fontStyle: 'italic',
-          fontSize: '15px',
-          color: '#191E1A',
-          marginBottom: '12px',
-          lineHeight: 1.3,
-        }}
-      >
-        {d.name}
+      {/* Hero: probability + disease name */}
+      <div style={{ marginBottom: '14px' }}>
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '44px',
+            fontVariantNumeric: 'tabular-nums',
+            fontWeight: 700,
+            color: '#B83A2E',
+            lineHeight: 1,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          {d.probability}%
+        </div>
+        <div
+          style={{
+            fontFamily: "'DM Serif Display', serif",
+            fontStyle: 'italic',
+            fontSize: '15px',
+            color: '#191E1A',
+            marginTop: '6px',
+            lineHeight: 1.3,
+          }}
+        >
+          {d.name}
+        </div>
       </div>
 
-      {/* Probability bar */}
-      <div style={{ marginBottom: '10px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontSize: '11px', color: '#7A7060' }}>
-            Probability
-          </span>
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '12px',
-              fontVariantNumeric: 'tabular-nums',
-              color: '#B83A2E',
-              fontWeight: 600,
-            }}
-          >
-            {d.probability}%
-          </span>
-        </div>
+      {/* Secondary hero: days before symptoms */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
+        <span
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '22px',
+            fontVariantNumeric: 'tabular-nums',
+            fontWeight: 700,
+            color: '#B83A2E',
+            lineHeight: 1,
+          }}
+        >
+          {d.daysBeforeSymptoms}
+        </span>
+        <span
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '10px',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: '#7A7060',
+          }}
+        >
+          {d.daysBeforeSymptoms === 1 ? 'day' : 'days'} before symptoms
+        </span>
+      </div>
+
+      {/* Detection timestamp */}
+      <div
+        style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: '10px',
+          color: '#BDB5A0',
+          marginBottom: '12px',
+        }}
+      >
+        Detected: {d.detectedAt}
+      </div>
+
+      {/* Probability bar — visual reinforcement, no label needed (44px number above) */}
+      <div aria-hidden="true" style={{ marginBottom: '12px' }}>
         <div style={{ height: '4px', background: 'rgba(184,58,46,0.12)', borderRadius: '2px', overflow: 'hidden' }}>
           <div style={{ width: `${d.probability}%`, height: '100%', background: '#B83A2E', borderRadius: '2px' }} />
         </div>
       </div>
 
-      {/* Meta */}
-      <div
-        style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '11px',
-          color: '#7A7060',
-          marginBottom: '2px',
-        }}
-      >
-        Detected: {d.detectedAt}
-        <span aria-hidden="true" style={{ color: '#BDB5A0' }}> · </span>
-        <strong style={{ color: '#B83A2E' }}>{d.daysBeforeSymptoms} days before visible symptoms</strong>
-      </div>
-
       {/* Action */}
-      <div style={{ borderTop: '1px solid rgba(189,181,160,0.35)', marginTop: '10px', paddingTop: '10px' }}>
+      <div style={{ borderTop: '1px solid rgba(189,181,160,0.35)', paddingTop: '10px' }}>
         <div
           style={{
             fontFamily: "'IBM Plex Mono', monospace",

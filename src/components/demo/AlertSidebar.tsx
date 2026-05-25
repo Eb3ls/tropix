@@ -40,12 +40,14 @@ export function AlertSidebar({
       {/* ── Disease alerts ── */}
       <div style={{ padding: '12px 0 4px' }}>
         <div style={{
-          padding: '0 16px 8px',
+          padding: '6px 16px 6px 15px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '10px',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
-          color: '#CC5427',
+          color: '#B83A2E',
+          borderLeft: '3px solid #B83A2E',
+          background: '#F0EADB',
         }}>
           Disease alerts · {diseasePlants.length}
         </div>
@@ -153,12 +155,14 @@ export function AlertSidebar({
       {monitorPlants.length > 0 && (
         <div style={{ padding: '4px 0 4px', borderTop: '1px solid #BDB5A0' }}>
           <div style={{
-            padding: '8px 16px 6px',
+            padding: '6px 16px 6px 15px',
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '10px',
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            color: '#7A7060',
+            color: '#CC5427',
+            borderLeft: '3px solid #CC5427',
+            background: '#F0EADB',
           }}>
             Field alerts · {monitorPlants.length}
           </div>
@@ -241,12 +245,14 @@ export function AlertSidebar({
       {/* ── Action list ── */}
       <div style={{ padding: '12px 0 16px', borderTop: '1px solid #BDB5A0' }}>
         <div style={{
-          padding: '0 16px 8px',
+          padding: '6px 16px 6px 15px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '10px',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
           color: '#546357',
+          borderLeft: '3px solid #BDB5A0',
+          background: '#F0EADB',
         }}>
           Scheduled actions · {pendingActions.length}
         </div>
