@@ -5,7 +5,6 @@ import { Challenge } from '@/components/sections/Challenge'
 import { System } from '@/components/sections/System'
 import { Capabilities } from '@/components/sections/Capabilities'
 import { InSeason } from '@/components/sections/InSeason'
-import { Market } from '@/components/sections/Market'
 import { Pilot } from '@/components/sections/Pilot'
 import { Team } from '@/components/sections/Team'
 import { Footer } from '@/components/sections/Footer'
@@ -22,8 +21,7 @@ function Landing() {
         <System />
         <Capabilities />
         <InSeason />
-        <Market />
-        <Pilot />
+<Pilot />
         <Team />
       </main>
       <Footer />
