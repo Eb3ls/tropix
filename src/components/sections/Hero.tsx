@@ -191,24 +191,17 @@ export function Hero() {
               }}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
-                color: 'rgba(232,225,207,0.80)',
+                background: '#CC5427', color: '#F0EADB',
                 fontFamily: "'Barlow Semi Condensed', sans-serif",
-                fontSize: '15px', fontWeight: 500,
-                padding: '12px 20px', borderRadius: '4px',
-                border: '1px solid rgba(232,225,207,0.22)',
+                fontSize: '15px', fontWeight: 600,
+                padding: '13px 24px', borderRadius: '4px',
                 textDecoration: 'none',
-                transition: 'border-color 200ms, color 200ms',
+                transition: 'background 200ms cubic-bezier(0.2, 0.7, 0.2, 1)',
               }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'rgba(232,225,207,0.5)'
-                e.currentTarget.style.color = '#E8E1CF'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'rgba(232,225,207,0.22)'
-                e.currentTarget.style.color = 'rgba(232,225,207,0.80)'
-              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#A8421C')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#CC5427')}
             >
-              View demo <ArrowRight size={13} />
+              View demo <ArrowRight size={15} />
             </a>
           </div>
         </div>

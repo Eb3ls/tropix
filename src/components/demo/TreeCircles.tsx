@@ -27,15 +27,13 @@ interface Props {
   zoom:           number
   /** Map container height in px — sizes are derived as ratios of this value. */
   mapHeight:      number
-  /** When true, shows tree ID + cx/cy on each marker for position calibration. */
-  showDebug?:     boolean
   onTreeClick:    (plant: Plant) => void
 }
 
 const pulse: CSSProperties = { animation: 'markerRingPulse 2.4s ease-in-out infinite' }
 
 export function TreeCircles({
-  plants, selectedId, highlightedIds, treatedIds, zoom, mapHeight, showDebug = false, onTreeClick,
+  plants, selectedId, highlightedIds, treatedIds, zoom, mapHeight, onTreeClick,
 }: Props) {
   // s counteracts parent CSS transform:scale(zoom) → constant screen size at all zoom levels
   const s = 1 / zoom
@@ -162,31 +160,6 @@ export function TreeCircles({
                 </span>
               )}
 
-              {/* Debug label — tree ID + coords, shown only when showDebug=true */}
-              {showDebug && (
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position:    'absolute',
-                    top:         `${(ringD / 2 + 3 * s)}px`,
-                    left:        '50%',
-                    transform:   'translateX(-50%)',
-                    background:  'rgba(0,0,0,0.82)',
-                    color:       '#FFE600',
-                    fontFamily:  "'IBM Plex Mono', monospace",
-                    fontSize:    `${9 * s}px`,
-                    padding:     `${1.5 * s}px ${3 * s}px`,
-                    borderRadius:`${2 * s}px`,
-                    whiteSpace:  'nowrap',
-                    pointerEvents: 'none',
-                    lineHeight:   1.4,
-                    textAlign:   'center',
-                  }}
-                >
-                  {label}<br />
-                  <span style={{ opacity: 0.75 }}>{cx} / {cy}</span>
-                </div>
-              )}
             </div>
           )
         })}
